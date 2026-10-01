@@ -1,214 +1,86 @@
-# 🗺️ TripCraft — AI-Powered Travel Planner
+<div align="center">
 
-TripCraft is a full-stack travel planning application designed for the DevOps Practices and Principles (CSUL511) course project. It lets users plan trips, compare travel options, and redirect to external booking platforms for hotels, flights, buses, trains, and cabs.
+# ✈️ TripCraft
 
-This repository demonstrates full-stack development, automated testing, CI in GitHub Actions, Jenkins-driven pipeline execution, Docker-based containerization, and monitoring setup.
+### **Plan Smarter. Travel Better.**
 
----
+<img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=22&pause=1100&color=36BCF7&center=true&vCenter=true&width=720&lines=AI-Powered+Travel+Planning.;Turn+Ideas+Into+Journeys.;Build+Your+Perfect+Itinerary.;Discover.+Plan.+Explore.+Travel." alt="Typing SVG" />
 
-## 👨‍🎓 Student Details
+<br>
 
-| Field | Details |
-|---|---|
-| Name | Arman |
-| Roll Number | 24ESKCS056 |
-| Course | B.Tech – Computer Science & Engineering |
-| Semester | V |
-| Subject | DevOps Practices and Principles (CSUL511) |
-| Institution | Swami Keshvanand Institute of Technology, Management & Gramothan (SKIT), Jaipur |
-| Session | 2026 |
+<p>
+  <img src="https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=white" />
+  <img src="https://img.shields.io/badge/Vite-Frontend-646CFF?style=for-the-badge&logo=vite&logoColor=white" />
+  <img src="https://img.shields.io/badge/Node.js-Backend-339933?style=for-the-badge&logo=node.js&logoColor=white" />
+  <img src="https://img.shields.io/badge/Express.js-API-000000?style=for-the-badge&logo=express&logoColor=white" />
+</p>
 
----
+<p>
+  <img src="https://img.shields.io/badge/MongoDB-Database-47A248?style=for-the-badge&logo=mongodb&logoColor=white" />
+  <img src="https://img.shields.io/badge/Mongoose-ODM-880000?style=for-the-badge&logo=mongoose&logoColor=white" />
+  <img src="https://img.shields.io/badge/Groq-AI-000000?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/JWT-Authentication-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white" />
+</p>
 
-## 🏗️ Architecture and Tech Stack
+<br>
 
-| Layer | Technology |
-|---|---|
-| Frontend | React 18 + Vite |
-| Backend | Node.js + Express.js |
-| Database | MongoDB + Mongoose |
-| Authentication | JWT + bcryptjs |
-| AI Integration | OpenAI API |
-| CI | GitHub Actions |
-| CD / Automation | Jenkinsfile pipeline |
-| Containerization | Docker + Docker Compose |
-| Monitoring | Prometheus + Grafana dashboard |
+<a href="#-overview">Overview</a> •
+<a href="#-features">Features</a> •
+<a href="#-architecture">Architecture</a> •
+<a href="#-setup">Setup</a> •
+<a href="#-api">API</a> •
+<a href="#-roadmap">Roadmap</a>
 
----
-
-## 🚀 Local Setup
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/skit-devops-2026/DevOps-24ESKCS056.git
-cd DevOps-24ESKCS056
-```
-
-### 2. Backend setup
-
-```bash
-cd server
-npm install
-cp .env.example .env
-```
-
-Update the `.env` values for your local environment, especially:
-
-- `PORT`
-- `MONGO_URI`
-- `JWT_SECRET`
-- `GROQ_API_KEY`
-- `GROQ_MODEL`
-
-### 3. Frontend setup
-
-```bash
-cd ../client
-npm install
-```
-
-### 4. Start the app locally
-
-Backend:
-
-```bash
-cd server
-npm start
-```
-
-Frontend:
-
-```bash
-cd client
-npm run dev
-```
-
-The frontend runs on `http://localhost:5173` by default, and the backend runs on `http://localhost:5000`.
+</div>
 
 ---
 
-## ✅ Testing
+## 🌍 Overview
 
-Run frontend tests:
+**TripCraft** is an AI-powered travel planning platform that transforms a simple
+set of travel preferences into a structured, personalized journey.
 
-```bash
-cd client
-npm test
-```
+Instead of switching between multiple websites to research destinations,
+build itineraries, compare accommodation options, and explore transport choices,
+TripCraft brings the core planning workflow together in one experience.
 
-Run backend tests:
+Users can provide:
 
-```bash
-cd server
-npm test
-```
+- 📍 Source and destination
+- 💰 Travel budget
+- 📅 Number of days
+- 👥 Number of travelers
+- 🎯 Travel preferences
 
-Run frontend production build:
+TripCraft then generates a structured travel plan containing:
 
-```bash
-cd client
-npm run build
-```
+- 🗺️ Day-wise itinerary
+- 🏨 Hotel suggestions
+- 🚆 Transport options
+- 📍 Places and attractions
 
-The repository includes real automated checks for the backend health API and frontend booking URL utilities.
-
----
-
-## 🔁 CI / GitHub Actions
-
-The workflow file in `.github/workflows/ci.yml` runs on pushes to `main`, `develop`, and `ci-pipeline`, and on pull requests to `main` and `develop`.
-
-It performs the following steps:
-
-1. Checks out the repo
-2. Installs Node.js 20
-3. Runs `npm ci` in the client and server
-4. Executes the frontend and backend automated tests
-5. Builds the frontend for production validation
-6. Verifies runtime versions
-
-This is the project’s CI definition used for automated validation.
+The platform also provides external booking redirects so users can continue
+their travel journey through relevant booking providers.
 
 ---
 
-## 🧪 Jenkins Pipeline
+## ✨ The Idea
 
-The repository includes a declarative Jenkins pipeline in `Jenkinsfile`.
+Travel planning is rarely a single task.
 
-The pipeline stages perform:
+A typical journey requires:
 
-1. Checkout code from SCM
-2. Install frontend dependencies
-3. Run frontend tests
-4. Build frontend assets
-5. Install backend dependencies
-6. Run backend tests
-
-This pipeline is meant to be executed in a local Jenkins instance connected to the repository.
-
----
-
-## 🐳 Docker and Compose
-
-Docker configuration is present for both the frontend and backend application layers.
-
-To build and run the stack locally:
-
-```bash
-docker compose up --build
-```
-
-This project includes:
-
-- `client/Dockerfile`
-- `server/Dockerfile`
-- `docker-compose.yml`
-
-The compose file runs:
-
-- MongoDB database service
-- Express backend
-- React frontend
-
----
-
-## 📈 Monitoring
-
-The backend exposes Prometheus metrics at `http://localhost:5000/metrics`.
-
-Relevant monitoring files:
-
-- `monitoring/prometheus.yml`
-- `monitoring/grafana-dashboard.json`
-
-The metrics cover HTTP request counts and durations, plus default Node.js process metrics such as memory usage, CPU time, and uptime.
-
----
-
-## 🔒 Security Notes
-
-Sensitive variables such as database credentials, JWT secrets, and API keys are not committed in tracked source files. The project uses `.env` files locally and includes an `.env.example` template for safe setup.
-
----
-
-## 📌 Git and Branching Notes
-
-The project follows a multi-branch workflow with `main` and feature/development branches. Pull requests are used to merge validated work into the active development branch before final integration.
-
----
-
-## 🧾 Repository Summary
-
-This repository covers the required DevOps practices for the course assignment, including:
-
-- Clean repository setup
-- Version-controlled source code
-- Git branching and PR workflow
-- Automated tests
-- GitHub Actions CI
-- Jenkins pipeline definition
-- Docker configuration
-- Monitoring setup
-
-The repository is intended for academic evaluation and live demonstration of DevOps workflow execution.
+```text
+Destination Research
+        ↓
+Budget Planning
+        ↓
+Itinerary Creation
+        ↓
+Hotel Search
+        ↓
+Transport Search
+        ↓
+Activity Discovery
+        ↓
+Booking
