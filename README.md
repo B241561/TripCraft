@@ -1,12 +1,27 @@
 <div align="center">
 
-✈️ TripCraft
+<img src="https://capsule-render.vercel.app/api?type=waving&height=180&text=TripCraft&fontSize=58&fontAlignY=38&desc=AI-Powered%20Travel%20Planner&descAlignY=61&animation=fadeIn&color=gradient" width="100%"/>
 
-AI-Powered Travel Planner
+Plan Smarter. Discover Better. Travel Your Way.
 
-Plan smarter. Discover better. Travel your way.
+<img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=17&pause=1100&center=true&vCenter=true&width=680&lines=Turn+travel+ideas+into+structured+journeys.;Generate+personalized+itineraries+with+AI.;Explore+places%2C+hotels%2C+and+transport+in+one+flow." alt="TripCraft"/>
+
+<br/>
+
+<a href="#-overview">Overview</a> •
+<a href="#-features">Features</a> •
+<a href="#-architecture">Architecture</a> •
+<a href="#-setup">Setup</a> •
+<a href="#-engineering">Engineering</a>
+
+<br/><br/>
 
 
+
+
+
+
+<br/>
 
 
 
@@ -17,110 +32,174 @@ Plan smarter. Discover better. Travel your way.
 
 🌍 Overview
 
-TripCraft is a full-stack travel planning platform that uses AI to turn
-travel preferences into structured, personalized journeys.
+TripCraft is a full-stack travel planning platform that converts a few
+travel preferences into a structured journey.
 
-Users can enter their source, destination, budget, trip duration, number of
-travelers, and preferences. TripCraft then generates a complete travel
-experience with an itinerary, hotel suggestions, transport options, and
-places to explore.
+A traveler can enter a source, destination, budget, duration, number of
+people, and preferences. The application sends these inputs through its
+backend and AI service, then presents the generated experience as an
+itinerary, places, hotels, and transport options.
 
-The platform also supports authentication, saved trips, and redirect-based
-booking access through external travel services.
+It also provides authentication, saved trips, and external booking redirects,
+turning trip planning into one connected workflow instead of a collection of
+separate searches.
 
-✨ Key Features
+One trip. One workspace. From idea to itinerary.
 
-Feature
+✨ Features
 
-Description
+<table>
+<tr>
+<td width="50%">
 
 🤖 AI Trip Generation
 
-Creates personalized travel plans using Groq
+Generate personalized travel plans through the Groq-powered AI service.
 
-🗺️ Smart Itinerary
+</td>
+<td width="50%">
 
-Organizes activities into a structured day-wise journey
+🗺️ Structured Itineraries
 
-🏨 Hotel Suggestions
+Organize generated activities into a clear, day-wise travel plan.
 
-Presents accommodation options for the generated trip
+</td>
+</tr>
 
-🚆 Transport Options
-
-Provides relevant travel choices
+<tr>
+<td>
 
 📍 Places & Attractions
 
-Highlights destinations and places to explore
+Discover relevant places to visit as part of the generated journey.
+
+</td>
+<td>
+
+🏨 Hotels & 🚆 Transport
+
+Keep accommodation and transport suggestions alongside the itinerary.
+
+</td>
+</tr>
+
+<tr>
+<td>
 
 🔐 Authentication
 
-JWT authentication with bcrypt password hashing
+JWT-based authentication with bcrypt password hashing.
+
+</td>
+<td>
 
 🧳 My Trips
 
-Save, view, and delete generated journeys
+Save, revisit, and delete generated journeys.
+
+</td>
+</tr>
+
+<tr>
+<td>
 
 🔗 Booking Redirects
 
-Continue to external travel and booking platforms
+Continue from selected options to external travel platforms.
 
-📱 Responsive UI
+</td>
+<td>
 
-React-based interface for a smooth planning experience
+📱 Focused UX
 
-🧠 How TripCraft Works
+A responsive React interface built around a simple planning flow.
 
-Travel Details
-     │
-     ▼
-React Frontend
-     │
-     ▼
+</td>
+</tr>
+</table>
+
+🧭 Product Flow
+
+          TRIP INPUT
+              │
+     ┌────────┼────────┐
+     │        │        │
+ Destination Budget  Preferences
+     │        │        │
+     └────────┼────────┘
+              ▼
+        ┌─────────────┐
+        │  Trip API   │
+        └──────┬──────┘
+               ▼
+        ┌─────────────┐
+        │  AI Service │
+        │    Groq     │
+        └──────┬──────┘
+               ▼
+      ┌───────────────────┐
+      │    TRIP RESULT    │
+      ├───────────────────┤
+      │ Itinerary         │
+      │ Hotels            │
+      │ Transport         │
+      │ Places            │
+      └─────────┬─────────┘
+                ▼
+       Save • Explore • Book
+
+🧠 AI Architecture
+
+Trip generation is isolated behind a dedicated service layer:
+
+React UI
+   ↓
 Express REST API
-     │
-     ▼
+   ↓
 Trip Controller
-     │
-     ▼
-AI Service → Groq
-     │
-     ▼
-Structured Trip Plan
-     │
-     ├── Itinerary
-     ├── Hotels
-     ├── Transport
-     └── Places
-     │
-     ▼
-Save / Explore / Book
+   ↓
+AI Service
+   ↓
+Groq API
+   ↓
+Structured Trip Result
+   ↓
+Trip Result UI
 
-TripCraft keeps the AI layer separate from the main application logic, while
-MongoDB provides persistent storage for users and saved trips.
+The provider and model are environment-driven, so AI configuration can evolve
+without changing the rest of the application.
+
+GROQ_API_KEY=your_groq_api_key
+GROQ_MODEL=your_groq_model
+
+Never commit real credentials.
 
 🏗️ Architecture
 
-┌──────────────────────┐
-│     React + Vite     │
-│       Frontend       │
-└──────────┬───────────┘
-           │ REST API
-           ▼
-┌──────────────────────┐
-│   Node.js + Express  │
-│       Backend        │
-└───────┬───────┬──────┘
-        │       │
-        │       └──────────► Groq AI
-        │
-        ▼
-┌──────────────────────┐
-│  MongoDB + Mongoose  │
-└──────────────────────┘
+                         ┌──────────────────────┐
+                         │        USER          │
+                         └──────────┬───────────┘
+                                    │
+                                    ▼
+                         ┌──────────────────────┐
+                         │    React + Vite      │
+                         │      Frontend        │
+                         └──────────┬───────────┘
+                                    │ REST API
+                                    ▼
+                         ┌──────────────────────┐
+                         │   Node + Express     │
+                         │       Backend        │
+                         └───────┬──────┬───────┘
+                                 │      │
+                      ┌──────────┘      └──────────┐
+                      ▼                            ▼
+              ┌───────────────┐            ┌──────────────┐
+              │ MongoDB       │            │   Groq AI    │
+              │ + Mongoose    │            │ AI Service   │
+              └───────────────┘            └──────────────┘
 
-🛠️ Tech Stack
+🛠️ Technology Stack
 
 Layer
 
@@ -128,31 +207,31 @@ Technology
 
 Frontend
 
-React 18, Vite
+React 18 + Vite
 
 Backend
 
-Node.js, Express.js
+Node.js + Express.js
 
 Database
 
-MongoDB, Mongoose
+MongoDB + Mongoose
 
 Authentication
 
-JWT, bcryptjs
+JWT + bcryptjs
 
 AI
 
 Groq
 
-API
+Communication
 
-REST
+REST API
 
 Testing
 
-Frontend & Backend automated tests
+Frontend + Backend automated tests
 
 DevOps
 
@@ -172,10 +251,20 @@ TripCraft/
 ├── client/
 │   └── src/
 │       ├── components/
+│       │   ├── Navbar.jsx
+│       │   └── Results/
 │       ├── context/
+│       │   └── AuthContext.jsx
 │       ├── pages/
+│       │   ├── Home.jsx
+│       │   ├── PlanTrip.jsx
+│       │   ├── TripResult.jsx
+│       │   ├── MyTrips.jsx
+│       │   └── Auth/
 │       ├── services/
+│       │   └── api.js
 │       ├── utils/
+│       │   └── bookingRedirects.js
 │       ├── App.jsx
 │       └── main.jsx
 │
@@ -190,11 +279,97 @@ TripCraft/
 │   └── server.js
 │
 ├── monitoring/
+├── .github/
 ├── Jenkinsfile
 ├── docker-compose.yml
 └── README.md
 
-⚙️ Getting Started
+🔌 API
+
+Method
+
+Endpoint
+
+Auth
+
+Purpose
+
+POST
+
+/api/auth/register
+
+—
+
+Create a user
+
+POST
+
+/api/auth/login
+
+—
+
+Authenticate a user
+
+GET
+
+/api/auth/me
+
+✓
+
+Get current user
+
+POST
+
+/api/trip/generate
+
+Optional
+
+Generate an AI trip
+
+GET
+
+/api/trip/my-trips
+
+✓
+
+Retrieve saved trips
+
+GET
+
+/api/trip/:id
+
+—
+
+Retrieve a trip
+
+DELETE
+
+/api/trip/:id
+
+✓
+
+Delete a saved trip
+
+🔐 Security
+
+Sensitive configuration stays outside tracked source code.
+
+Create:
+
+server/.env
+
+Example:
+
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+GROQ_API_KEY=your_groq_api_key
+GROQ_MODEL=your_groq_model
+
+Authentication uses JWT, while passwords are protected using bcryptjs.
+The repository uses server/.env.example as the safe configuration template.
+
+⚙️ Setup
 
 1. Clone
 
@@ -206,15 +381,9 @@ cd TripCraft
 cd server
 npm install
 
-Create server/.env:
+Create server/.env and configure the required values.
 
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
-GROQ_API_KEY=your_groq_api_key
-GROQ_MODEL=your_groq_model
-
-Start the backend:
+Start the API:
 
 npm start
 
@@ -226,7 +395,7 @@ cd client
 npm install
 npm run dev
 
-Frontend:
+Open:
 
 http://localhost:5173
 
@@ -234,93 +403,158 @@ Backend:
 
 http://localhost:5000
 
-Never commit real API keys, database credentials, or other secrets.
-
 ✅ Testing
 
-Frontend
+Frontend:
 
 cd client
 npm test
 npm run build
 
-Backend
+Backend:
 
 cd server
 npm test
 
-The project includes automated checks for frontend utilities and backend API
-behaviour.
+The project includes automated frontend and backend validation, with dedicated
+checks for frontend booking utilities and backend API behaviour.
 
 🐳 Docker
 
-TripCraft includes Docker configuration for the application stack.
+TripCraft includes Dockerfiles and a Compose configuration for the application
+stack.
 
 docker compose up --build
 
-The Compose setup brings together the frontend, backend, and MongoDB services.
+Conceptually:
 
-⚙️ CI/CD & Monitoring
+┌──────────────┐
+│   Frontend   │
+│   Container  │
+└──────┬───────┘
+       │
+       ▼
+┌──────────────┐
+│   Backend    │
+│   Container  │
+└──────┬───────┘
+       │
+       ▼
+┌──────────────┐
+│   MongoDB    │
+└──────────────┘
 
-The repository includes an automated development workflow using:
+⚙️ CI / CD & Observability
 
-GitHub Actions for continuous integration
+GitHub Actions
 
-Jenkins for pipeline execution
+Checkout
+   ↓
+Install Dependencies
+   ↓
+Run Tests
+   ↓
+Build
+   ↓
+Validate
 
-Docker Compose for containerized services
+Jenkins
 
-Prometheus for metrics collection
+The repository includes a declarative Jenkinsfile for automated pipeline
+execution across the project's build and test stages.
 
-Grafana for visualization
+Monitoring
 
-Application metrics are exposed through:
+TripCraft Backend
+       ↓
+   /metrics
+       ↓
+  Prometheus
+       ↓
+    Grafana
+
+Metrics endpoint:
 
 http://localhost:5000/metrics
 
-🔐 Security
+🧩 Engineering
 
-TripCraft keeps sensitive configuration outside tracked source code.
+TripCraft is built around clear separation of responsibilities:
 
-Use:
+Frontend — presentation, navigation, forms, and result visualization.
 
-server/.env
+Backend — REST APIs, business logic, authentication, and persistence.
 
-with:
+AI Service — isolated trip-generation and model integration layer.
 
-server/.env.example
+Database — user and saved-trip persistence.
 
-as the configuration reference.
+Infrastructure — containerization, CI/CD, and observability.
 
-Authentication uses JWT, while user passwords are handled using bcryptjs.
+This structure keeps the system easier to test, evolve, and maintain.
+
+🔗 Booking Experience
+
+TripCraft keeps booking separate from the core planning workflow:
+
+Generated Option
+      ↓
+User Selection
+      ↓
+Booking Redirect Utility
+      ↓
+External Travel Platform
+
+The application focuses on planning and discovery rather than processing payments
+directly.
 
 🔮 Roadmap
 
-🗺️ Interactive maps
+[✓] AI Trip Generation
+[✓] Authentication
+[✓] Saved Trips
+[✓] Itinerary / Hotels / Transport / Places
+[✓] Booking Redirects
 
-🌦️ Weather-aware trip planning
-
-💰 Smarter budget optimization
-
-🤝 Collaborative trip planning
-
-📅 Editable itineraries and calendar integration
-
-🧠 More personalized recommendations
+[ ] Interactive Maps
+[ ] Weather-Aware Planning
+[ ] Smart Budget Optimization
+[ ] Collaborative Trip Planning
+[ ] Editable Itineraries
+[ ] Calendar Integration
+[ ] Deeper Personalization
 
 💡 Vision
 
-TripCraft is built around a simple idea:
+TripCraft is designed to grow from a trip generator into a more complete
+personal travel assistant.
 
-Discover → Plan → Generate → Explore → Save → Travel
+Discover
+   ↓
+Plan
+   ↓
+Generate
+   ↓
+Refine
+   ↓
+Explore
+   ↓
+Travel
 
-The goal is to make travel planning feel less like collecting information from
-multiple sources and more like creating one complete journey.
+Your journey starts with an idea. TripCraft helps turn it into a plan.
 
 <div align="center">
 
-✈️ Discover. Plan. Explore. Experience.
+✈️ TripCraft
 
-TripCraft — Your journey, crafted digitally.
+Discover. Plan. Explore. Experience.
+
+<br/>
+
+<img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&size=15&pause=1500&center=true&vCenter=true&width=500&lines=Your+journey%2C+crafted+digitally.;Built+for+better+travel+planning." />
+
+<br/><br/>
+
+<img src="https://capsule-render.vercel.app/api?type=waving&height=100&section=footer&color=gradient" width="100%"/>
 
 </div>
