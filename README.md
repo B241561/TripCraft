@@ -435,7 +435,7 @@ Authentication uses **JWT**, while passwords are protected with **bcryptjs**.
 
 <br><br>
 
-<img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=85" width="100%" alt="Tropical beach">
+<img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=85" width="90%" alt="Tropical beach">
 
 <br><br>
 
