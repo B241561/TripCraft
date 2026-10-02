@@ -431,11 +431,11 @@ Authentication uses **JWT**, while passwords are protected with **bcryptjs**.
 
 <div align="center">
 
-<img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=85" width="90%" alt="Hotel" >
-
 <br><br>
 
 <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=85" width="90%" alt="Tropical beach">
+
+<img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=85" width="90%" alt="Hotel" >
 
 <br><br>
 
