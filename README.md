@@ -137,6 +137,11 @@ A focused React interface built around the travel-planning workflow.
 
 ---
 
+##Technical Proof
+
+<img width="1917" height="918" alt="image" src="https://github.com/user-attachments/assets/464da9db-7132-4ff5-9cd3-58699e434de1" />
+
+
 ## 🧠 AI Architecture
 
 Trip generation is isolated behind a dedicated backend service layer.
