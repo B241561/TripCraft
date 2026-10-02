@@ -138,11 +138,18 @@ A focused React interface built around the travel-planning workflow.
 
 ## Technical Proof
 
+###1
 <img width="1917" height="918" alt="image" src="https://github.com/user-attachments/assets/464da9db-7132-4ff5-9cd3-58699e434de1" />
 
 <br></br>
 
+###2
 <img width="1907" height="897" alt="image" src="https://github.com/user-attachments/assets/425ffab2-1992-46f8-9d01-5b5850109319" />
+
+<br></br>
+
+###3
+<img width="1917" height="918" alt="image" src="https://github.com/user-attachments/assets/f6e0dc73-2465-4f2f-b881-f629dfe1ebcf" />
 
 
 
