@@ -1,4 +1,8 @@
+<div align="center">
 
+<img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=85" width="100%" alt="Tropical beach">
+
+<br><br>
 
 # ✈️ TripCraft
 
@@ -14,14 +18,6 @@
 ![Express](https://img.shields.io/badge/Express-000000?style=flat-square&logo=express&logoColor=white)
 ![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat-square&logo=mongodb&logoColor=white)
 ![Groq](https://img.shields.io/badge/Groq-AI-111111?style=flat-square)
-
-
-<div align="center">
-
-<img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=85" width="100%" alt="Tropical beach">
-
-<br><br>
-
 
 </div>
 ---
