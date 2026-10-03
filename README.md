@@ -136,27 +136,7 @@ A focused React interface built around the travel-planning workflow.
 
 Trip generation is isolated behind a dedicated backend service layer.
 
-<pre>
-React Frontend
-      │
-      ▼
-Express REST API
-      │
-      ▼
-Trip Controller
-      │
-      ▼
-AI Service
-      │
-      ▼
-Groq
-      │
-      ▼
-Structured Trip Response
-      │
-      ▼
-Trip Result UI
-</pre>
+<img width="1024" height="572" alt="c4df3233-1636-4693-8a94-5a77766999f5" src="https://github.com/user-attachments/assets/15eef223-6c4d-4c11-80f6-ecb43923190b" />
 
 AI configuration is environment-driven:
 
@@ -170,31 +150,9 @@ Never commit real credentials.
 ---
 
 ## 🏗️ System Architecture
+<img width="1024" height="572" alt="e9d42489-2fa0-4ceb-af7c-653fb850f05a" src="https://github.com/user-attachments/assets/403e90ec-aeff-4c3e-8bdc-81747183532b" />
 
-<pre>
-                         ┌──────────────────┐
-                         │       USER       │
-                         └────────┬─────────┘
-                                  │
-                                  ▼
-                         ┌──────────────────┐
-                         │   React + Vite   │
-                         │    Frontend      │
-                         └────────┬─────────┘
-                                  │ REST
-                                  ▼
-                         ┌──────────────────┐
-                         │ Node + Express   │
-                         │     Backend      │
-                         └──────┬──────┬────┘
-                                │      │
-                     ┌──────────┘      └──────────┐
-                     ▼                            ▼
-              ┌──────────────┐             ┌──────────────┐
-              │   MongoDB    │             │   Groq AI    │
-              │ + Mongoose   │             │ AI Service   │
-              └──────────────┘             └──────────────┘
-</pre>
+
 
 ---
 
