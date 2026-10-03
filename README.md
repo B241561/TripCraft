@@ -110,32 +110,8 @@ A focused React interface built around the travel-planning workflow.
 
 ## 🧭 Product Flow
 
-<pre>
-                     TRIP INPUT
-                         │
-        ┌────────────────┼────────────────┐
-        │                │                │
-   Destination        Budget         Preferences
-        │                │                │
-        └────────────────┼────────────────┘
-                         ▼
-                  ┌─────────────┐
-                  │   Trip API  │
-                  └──────┬──────┘
-                         ▼
-                  ┌─────────────┐
-                  │  AI Service │
-                  │     Groq    │
-                  └──────┬──────┘
-                         ▼
-             ┌─────────────────────────┐
-             │       TRIP RESULT       │
-             │ Itinerary • Places     │
-             │ Hotels • Transport     │
-             └────────────┬────────────┘
-                          ▼
-                 SAVE • EXPLORE • BOOK
-</pre>
+<img width="1024" height="572" alt="6be38399-02ff-4ba5-9154-2ca2177e2cc2" src="https://github.com/user-attachments/assets/84924c99-2f5f-4bf5-b935-37d8feab1024" />
+
 
 ---
 
