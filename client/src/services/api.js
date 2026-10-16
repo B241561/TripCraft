@@ -1,6 +1,13 @@
 import axios from 'axios';
 
-const API = axios.create({ baseURL: import.meta.env.VITE_API_URL || '/api' });
+const configuredApiUrl = import.meta.env.VITE_API_URL;
+const apiBaseUrl = configuredApiUrl
+  ? configuredApiUrl.startsWith('/')
+    ? configuredApiUrl.replace(/\/+$/, '')
+    : `${configuredApiUrl.startsWith('http') ? '' : 'https://'}${configuredApiUrl.replace(/\/+$/, '').replace(/\/api$/, '')}/api`
+  : '/api';
+
+const API = axios.create({ baseURL: apiBaseUrl });
 
 API.interceptors.request.use((config) => {
   const token = localStorage.getItem('tripcraft_token');
