@@ -7,6 +7,141 @@ const groq = process.env.GROQ_API_KEY
     })
   : null;
 
+const tripPlanSchema = {
+  type: 'object',
+  properties: {
+    itinerary: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          day: { type: 'integer' },
+          title: { type: 'string' },
+          theme: { type: 'string' },
+          activities: { type: 'array', items: { type: 'string' } },
+        },
+        required: ['day', 'title', 'theme', 'activities'],
+        additionalProperties: false,
+      },
+    },
+    hotels: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+          area: { type: 'string' },
+          pricePerNight: { type: 'number' },
+          totalPrice: { type: 'number' },
+          rating: { type: 'number' },
+          amenities: { type: 'array', items: { type: 'string' } },
+          platform: { type: 'string' },
+          bookingUrl: { type: 'string' },
+          highlight: { type: 'string' },
+        },
+        required: [
+          'name',
+          'area',
+          'pricePerNight',
+          'totalPrice',
+          'rating',
+          'amenities',
+          'platform',
+          'bookingUrl',
+          'highlight',
+        ],
+        additionalProperties: false,
+      },
+    },
+    transport: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          mode: { type: 'string' },
+          provider: { type: 'string' },
+          estimatedCostPerPerson: { type: 'number' },
+          totalCost: { type: 'number' },
+          duration: { type: 'string' },
+          platform: { type: 'string' },
+          bookingUrl: { type: 'string' },
+          pros: { type: 'array', items: { type: 'string' } },
+          departureInfo: { type: 'string' },
+        },
+        required: [
+          'mode',
+          'provider',
+          'estimatedCostPerPerson',
+          'totalCost',
+          'duration',
+          'platform',
+          'bookingUrl',
+          'pros',
+          'departureInfo',
+        ],
+        additionalProperties: false,
+      },
+    },
+    topPlaces: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+          description: { type: 'string' },
+          entryFee: { type: 'string' },
+          bestTime: { type: 'string' },
+          category: { type: 'string' },
+          mustSee: { type: 'boolean' },
+        },
+        required: [
+          'name',
+          'description',
+          'entryFee',
+          'bestTime',
+          'category',
+          'mustSee',
+        ],
+        additionalProperties: false,
+      },
+    },
+    totalEstimatedCost: { type: 'number' },
+    costBreakdown: {
+      type: 'object',
+      properties: {
+        transport: { type: 'number' },
+        accommodation: { type: 'number' },
+        food: { type: 'number' },
+        activities: { type: 'number' },
+        miscellaneous: { type: 'number' },
+      },
+      required: [
+        'transport',
+        'accommodation',
+        'food',
+        'activities',
+        'miscellaneous',
+      ],
+      additionalProperties: false,
+    },
+    tips: { type: 'array', items: { type: 'string' } },
+    bestTimeToVisit: { type: 'string' },
+    localCuisine: { type: 'array', items: { type: 'string' } },
+  },
+  required: [
+    'itinerary',
+    'hotels',
+    'transport',
+    'topPlaces',
+    'totalEstimatedCost',
+    'costBreakdown',
+    'tips',
+    'bestTimeToVisit',
+    'localCuisine',
+  ],
+  additionalProperties: false,
+};
+
 const generateTripPlan = async ({
   source,
   destination,
@@ -136,23 +271,32 @@ Rules:
     messages: [{ role: 'user', content: prompt }],
     temperature: 0.7,
     max_tokens: 4000,
+    response_format: {
+      type: 'json_schema',
+      json_schema: {
+        name: 'trip_plan',
+        strict: true,
+        schema: tripPlanSchema,
+      },
+    },
   });
 
-  const content = response.choices[0].message.content.trim();
-  const cleaned = content.replace(/```json|```/g, '').trim();
+  const choice = response.choices?.[0];
+  if (!choice) throw new Error('Groq returned no completion choices');
+  if (choice.finish_reason === 'length') {
+    throw new Error('Groq returned an incomplete trip plan due to the token limit');
+  }
+  if (choice.message?.refusal) {
+    throw new Error('Groq declined to generate the requested trip plan');
+  }
+  if (typeof choice.message?.content !== 'string' || !choice.message.content.trim()) {
+    throw new Error('Groq returned an empty trip plan');
+  }
 
   try {
-    const plan = JSON.parse(cleaned);
-    return plan;
-  } catch (e) {
-    // Try to extract JSON from response
-    const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
-
-    if (jsonMatch) {
-      return JSON.parse(jsonMatch[0]);
-    }
-
-    throw new Error('Failed to parse AI response as JSON');
+    return JSON.parse(choice.message.content);
+  } catch {
+    throw new Error('Groq returned invalid JSON for the trip plan');
   }
 };
 
