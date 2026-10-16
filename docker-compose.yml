@@ -32,14 +32,14 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
+      args:
+        VITE_API_URL: /api
     container_name: tripcraft-frontend
     restart: unless-stopped
     depends_on:
       - backend
     ports:
-      - "5173:80"
-    environment:
-      VITE_API_URL: http://localhost:5000
+      - "3000:80"
 
 volumes:
   mongo_data:

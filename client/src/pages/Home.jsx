@@ -11,7 +11,7 @@ const destinations = [
 ];
 
 const features = [
-  { icon: <Sparkles size={22} />, title: 'AI-Powered Plans', desc: 'GPT-4o crafts your perfect day-by-day itinerary in seconds' },
+  { icon: <Sparkles size={22} />, title: 'AI-Powered Plans', desc: 'Groq crafts your perfect day-by-day itinerary in seconds' },
   { icon: <Map size={22} />, title: 'Smart Comparisons', desc: 'Compare hotels, trains, buses and flights side by side' },
   { icon: <Star size={22} />, title: 'Top 10 Places', desc: 'Curated must-visit spots for every destination' },
   { icon: <ArrowRight size={22} />, title: 'One-Click Booking', desc: 'Redirects to RedBus, RailYatri, MakeMyTrip instantly' },
