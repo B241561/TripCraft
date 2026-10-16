@@ -52,12 +52,13 @@ const tcpProbe = ({ hostname, port }, timeoutMs = 5000) => new Promise((resolve)
   socket.once('error', (error) => finish('error', error.code || error.name));
 });
 
-const tlsProbe = ({ hostname, port }, timeoutMs = 5000) => new Promise((resolve) => {
+const tlsProbe = ({ hostname, port }, timeoutMs = 5000, tlsOptions = {}) => new Promise((resolve) => {
   const socket = tls.connect({
     host: hostname,
     port,
     servername: hostname,
     rejectUnauthorized: true,
+    ...tlsOptions,
   });
   let settled = false;
 
@@ -179,6 +180,22 @@ const probeMongoNetwork = async (uri) => {
         probe.message && `message=${probe.message}`,
       ].filter(Boolean).join('; ');
       console.log(`MongoDB TLS probe: ${probe.hostname}:${probe.port} ${probe.result}${details ? ` (${details})` : ''}`);
+    }
+
+    const tls12Probes = await Promise.all(records.map(({ name, port }) => tlsProbe(
+      { hostname: name, port },
+      5000,
+      { minVersion: 'TLSv1.2', maxVersion: 'TLSv1.2' },
+    )));
+    for (const probe of tls12Probes) {
+      const details = [
+        probe.protocol && `protocol=${probe.protocol}`,
+        probe.authorized !== undefined && `authorized=${probe.authorized}`,
+        probe.authorizationError && `authorizationError=${probe.authorizationError}`,
+        probe.code && `code=${probe.code}`,
+        probe.message && `message=${probe.message}`,
+      ].filter(Boolean).join('; ');
+      console.log(`MongoDB TLS 1.2 probe: ${probe.hostname}:${probe.port} ${probe.result}${details ? ` (${details})` : ''}`);
     }
   } else {
     console.log('MongoDB TLS probe: skipped because TLS is disabled by connection options');
