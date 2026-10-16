@@ -128,8 +128,8 @@ A focused React interface built around the travel-planning workflow.
 <br></br>
 
 ### 3
-<img width="1917" height="918" alt="image" src="https://github.com/user-attachments/assets/f6e0dc73-2465-4f2f-b881-f629dfe1ebcf" />
 
+<img width="1917" height="1020" alt="image" src="https://github.com/user-attachments/assets/c7714ffa-54e7-444f-bd78-4fb8caf8e823" />
 
 
 ## 🧠 AI Architecture
