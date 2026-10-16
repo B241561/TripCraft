@@ -29,8 +29,6 @@
 
 </div>
 
----
-
 ## 🌍 Overview
 
 **TripCraft** is a full-stack, AI-powered travel planning platform that transforms a few travel preferences into a structured journey. Enter a **source, destination, budget, duration, number of travelers, and preferences**, and TripCraft generates a personalized travel experience with:
@@ -621,3 +619,59 @@ The repository is intended for academic evaluation and live demonstration of the
 <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&size=14&pause=1500&center=true&vCenter=true&width=500&lines=Your+journey%2C+crafted+digitally.;Built+for+better+travel+planning." alt="TripCraft footer" />
 
 </div>
+
+## Verified DevOps Workflow Notes
+
+### Local Docker Compose
+
+Create `server/.env` from `server/.env.example` and set a valid
+`GROQ_API_KEY` and a strong `JWT_SECRET`. Compose overrides `MONGO_URI` to
+use its local `mongo` service; it does not connect the local stack to Atlas.
+
+```powershell
+Copy-Item server/.env.example server/.env
+docker compose config --quiet
+docker compose up -d --build
+docker compose ps
+```
+
+The Compose frontend is available at `http://localhost:3000`, the backend
+at `http://localhost:5000`, and MongoDB at `localhost:27017`. Nginx proxies
+frontend `/api` requests to the backend container. Check backend health and
+metrics at `/api/health` and `/metrics`.
+
+### Production API configuration
+
+`VITE_API_URL` is a frontend build-time setting. Leave it unset for local
+development and Compose, where `/api` is proxied by Vite or Nginx. For a
+separately hosted frontend, set it to the real backend origin plus `/api`
+when building. Set the backend's `FRONTEND_URL` to the exact frontend
+origin; neither setting contains a secret.
+
+No public frontend or backend URL has been assigned to this checkout. Do
+not treat a placeholder as a live deployment address.
+
+### Kubernetes (local kind)
+
+The `k8s/` manifests deploy the backend, frontend, and MongoDB with health
+probes and persistent database storage. Before applying them, create the
+`tripcraft-secrets` Secret with `JWT_SECRET` and `GROQ_API_KEY` from a
+secure local source, and `ghcr-pull-secret` with a GitHub Container
+Registry credential that has `read:packages` access. Do not commit either
+Secret or its values.
+
+```powershell
+kind create cluster --name tripcraft
+kubectl apply -f k8s/
+kubectl rollout status deployment/tripcraft-mongo
+kubectl rollout status deployment/tripcraft-backend
+kubectl rollout status deployment/tripcraft-frontend
+kubectl get pods
+kubectl port-forward service/tripcraft-frontend 3003:80
+```
+
+Open `http://localhost:3003` while the port-forward command is running.
+The ConfigMap's `FRONTEND_URL` is set for that local port-forward; change
+it to the actual frontend origin before exposing the service elsewhere.
+
+The current pod evidence is saved in `docs/kubernetes-pods.png`.
