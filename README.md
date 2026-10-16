@@ -675,3 +675,18 @@ The ConfigMap's `FRONTEND_URL` is set for that local port-forward; change
 it to the actual frontend origin before exposing the service elsewhere.
 
 The current pod evidence is saved in `docs/kubernetes-pods.png`.
+
+### Render deployment
+
+The root `render.yaml` Blueprint defines a Free-tier Docker backend and
+static frontend. Create the Blueprint from the course repository's `main`
+branch in Render. During initial Blueprint setup, enter `MONGO_URI` and
+`GROQ_API_KEY` directly into Render's secure secret prompts; the Blueprint
+does not store their values. Render generates `JWT_SECRET`.
+
+After Render assigns the static site's URL, add that exact origin as the
+backend's `FRONTEND_URL` environment variable and redeploy. Configure the
+MongoDB Atlas Network Access list for the backend service's actual Render
+outbound IP ranges; do not allow all IPs as a shortcut. The Free web service
+can spin down while idle. Do not report a public deployment until its health
+and metrics endpoints and the frontend are verified.
