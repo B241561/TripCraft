@@ -224,6 +224,30 @@ Prometheus target is for local Docker Desktop monitoring via
 `host.docker.internal:5000`; update it only when a real deployment endpoint
 is available.
 
+## Kubernetes (local kind)
+
+The manifests under `k8s/` deploy the backend, frontend, and MongoDB with
+health probes and persistent database storage. Before applying them, create
+the `tripcraft-secrets` Kubernetes Secret with `JWT_SECRET` and
+`GROQ_API_KEY` from a secure local secret source, and create
+`ghcr-pull-secret` with a GitHub Container Registry credential that has
+`read:packages` access. Do not commit either Secret or any secret values.
+
+```powershell
+kind create cluster --name tripcraft
+kubectl apply -f k8s/
+kubectl rollout status deployment/tripcraft-mongo
+kubectl rollout status deployment/tripcraft-backend
+kubectl rollout status deployment/tripcraft-frontend
+kubectl get pods
+kubectl port-forward service/tripcraft-frontend 3003:80
+```
+
+Open `http://localhost:3003` while the port-forward command is running.
+The Kubernetes ConfigMap's `FRONTEND_URL` matches that local port-forward;
+change it to the actual frontend origin before using a separately exposed
+frontend.
+
 ---
 
 ## 🔒 Security Notes
