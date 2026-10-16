@@ -343,6 +343,34 @@ Rules:
     if (errors.length) {
       throw createPlanFormatError(`Groq returned an incomplete trip plan: ${errors[0]}`);
     }
+    if (plan.itinerary.length !== numberOfDays) {
+      throw createPlanFormatError(`Groq returned ${plan.itinerary.length} itinerary days instead of ${numberOfDays}`);
+    }
+    if (plan.itinerary.some((day, index) => day.day !== index + 1)) {
+      throw createPlanFormatError('Groq returned itinerary days that are not numbered consecutively');
+    }
+    if (plan.hotels.length !== 3) {
+      throw createPlanFormatError(`Groq returned ${plan.hotels.length} hotels instead of 3`);
+    }
+    if (plan.topPlaces.length !== 10) {
+      throw createPlanFormatError(`Groq returned ${plan.topPlaces.length} top places instead of 10`);
+    }
+    if (plan.transport.length < 2 || plan.transport.length > 3) {
+      throw createPlanFormatError(`Groq returned ${plan.transport.length} transport options; expected 2 or 3`);
+    }
+
+    const breakdownTotal = Object.values(plan.costBreakdown)
+      .reduce((total, amount) => total + amount, 0);
+    if (Math.abs(breakdownTotal - plan.totalEstimatedCost) > 0.01) {
+      throw createPlanFormatError(
+        `The cost breakdown totals ₹${breakdownTotal}, not ₹${plan.totalEstimatedCost}`,
+      );
+    }
+    if (plan.totalEstimatedCost > budget) {
+      throw createPlanFormatError(
+        `The estimated total ₹${plan.totalEstimatedCost} exceeds the ₹${budget} budget`,
+      );
+    }
     return plan;
   };
 
@@ -351,7 +379,7 @@ Rules:
     return parsePlan(response);
   } catch (error) {
     if (error.code !== 'TRIP_PLAN_FORMAT') throw error;
-    const retryPrompt = `${prompt}\n\nThe previous response failed validation: ${error.message}. Return the complete trip plan again and include every required property in every object.`;
+    const retryPrompt = `${prompt}\n\nThe previous response failed validation: ${error.message}. Correct the issue and return the complete trip plan again. Include every required property and ensure the cost breakdown adds up to a total no greater than ₹${budget}.`;
     return parsePlan(await requestPlan(retryPrompt));
   }
 };
