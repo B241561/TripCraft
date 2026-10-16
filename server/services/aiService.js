@@ -315,7 +315,7 @@ Rules:
       model: process.env.GROQ_MODEL || 'openai/gpt-oss-120b',
       messages: [{ role: 'user', content }],
       temperature: 0.2,
-      max_tokens: 4000,
+      max_completion_tokens: 8192,
       response_format: {
         type: 'json_schema',
         json_schema: {
