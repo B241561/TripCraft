@@ -67,6 +67,7 @@ const loadAiService = (completions) => {
             requests.push(options);
             const completion = completions[Math.min(completionIndex, completions.length - 1)];
             completionIndex += 1;
+            if (completion instanceof Error) throw completion;
             return completion;
           },
         },
@@ -94,7 +95,7 @@ const loadAiService = (completions) => {
   }
 };
 
-test('trip generation requests JSON mode and parses the returned plan', async () => {
+test('trip generation requests strict JSON schema and parses the returned plan', async () => {
   const service = loadAiService([
     { choices: [{ finish_reason: 'stop', message: { content: JSON.stringify(tripPlan) } }] },
   ]);
@@ -111,7 +112,10 @@ test('trip generation requests JSON mode and parses the returned plan', async ()
 
   assert.deepEqual(plan, tripPlan);
   assert.equal(request.model, 'openai/gpt-oss-120b');
-  assert.deepEqual(request.response_format, { type: 'json_object' });
+  assert.equal(request.response_format.type, 'json_schema');
+  assert.equal(request.response_format.json_schema.name, 'trip_plan');
+  assert.equal(request.response_format.json_schema.strict, true);
+  assert.equal(request.response_format.json_schema.schema.additionalProperties, false);
 });
 
 test('trip generation retries an incomplete JSON object and returns the validated retry', async () => {
@@ -174,6 +178,31 @@ test('trip generation retries a cost breakdown that exceeds the requested budget
   assert.deepEqual(plan.costBreakdown, tripPlan.costBreakdown);
   assert.equal(requests.length, 2);
   assert.match(requests[1].messages[0].content, /cost breakdown totals ₹16000/);
+});
+
+test('trip generation retries Groq schema-validation errors', async () => {
+  const providerError = new Error(
+    "400 Generated JSON does not match the expected schema: missing properties: 'mustSee'",
+  );
+  providerError.status = 400;
+  const service = loadAiService([
+    providerError,
+    { choices: [{ finish_reason: 'stop', message: { content: JSON.stringify(tripPlan) } }] },
+  ]);
+
+  const plan = await service.generateTripPlan({
+    source: 'Delhi',
+    destination: 'Jaipur',
+    budget: 15000,
+    numberOfDays: 5,
+    numberOfPeople: 2,
+    preferences: [],
+  });
+  const requests = service.getRequests();
+
+  assert.deepEqual(plan, tripPlan);
+  assert.equal(requests.length, 2);
+  assert.match(requests[1].messages[0].content, /missing properties: 'mustSee'/);
 });
 
 test('trip generation reports provider truncation explicitly', async () => {

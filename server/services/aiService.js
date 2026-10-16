@@ -314,9 +314,16 @@ Rules:
     groq.chat.completions.create({
       model: process.env.GROQ_MODEL || 'openai/gpt-oss-120b',
       messages: [{ role: 'user', content }],
-      temperature: 0.7,
+      temperature: 0.2,
       max_tokens: 4000,
-      response_format: { type: 'json_object' },
+      response_format: {
+        type: 'json_schema',
+        json_schema: {
+          name: 'trip_plan',
+          strict: true,
+          schema: tripPlanSchema,
+        },
+      },
     });
 
   const parsePlan = (response) => {
@@ -374,13 +381,20 @@ Rules:
     return plan;
   };
 
-  const response = await requestPlan(prompt);
-  try {
-    return parsePlan(response);
-  } catch (error) {
-    if (error.code !== 'TRIP_PLAN_FORMAT') throw error;
-    const retryPrompt = `${prompt}\n\nThe previous response failed validation: ${error.message}. Correct the issue and return the complete trip plan again. Include every required property and ensure the cost breakdown adds up to a total no greater than ₹${budget}.`;
-    return parsePlan(await requestPlan(retryPrompt));
+  let requestPrompt = prompt;
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      return parsePlan(await requestPlan(requestPrompt));
+    } catch (error) {
+      const retryableProviderError =
+        error.status === 400 &&
+        /failed to generate json|generated json does not match the expected schema/i.test(error.message);
+      if (attempt === 1 || (error.code !== 'TRIP_PLAN_FORMAT' && !retryableProviderError)) {
+        throw error;
+      }
+
+      requestPrompt = `${prompt}\n\nThe previous response failed validation: ${error.message}. Correct the issue and return the complete trip plan again. Include every required property, exactly ${numberOfDays} consecutive itinerary days, exactly 3 hotels, exactly 10 top places, and ensure the cost breakdown adds up to a total no greater than ₹${budget}.`;
+    }
   }
 };
 
