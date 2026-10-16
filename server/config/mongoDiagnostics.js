@@ -1,5 +1,6 @@
 const dns = require('node:dns').promises;
 const net = require('node:net');
+const tls = require('node:tls');
 const safeOptionNames = [
   'authSource',
   'replicaSet',
@@ -51,6 +52,36 @@ const tcpProbe = ({ hostname, port }, timeoutMs = 5000) => new Promise((resolve)
   socket.once('error', (error) => finish('error', error.code || error.name));
 });
 
+const tlsProbe = ({ hostname, port }, timeoutMs = 5000) => new Promise((resolve) => {
+  const socket = tls.connect({
+    host: hostname,
+    port,
+    servername: hostname,
+    rejectUnauthorized: true,
+  });
+  let settled = false;
+
+  const finish = (result, details = {}) => {
+    if (settled) return;
+    settled = true;
+    clearTimeout(timer);
+    socket.destroy();
+    resolve({ hostname, port, result, ...details });
+  };
+
+  const timer = setTimeout(() => finish('timeout'), timeoutMs);
+  socket.setTimeout(timeoutMs, () => finish('timeout'));
+  socket.once('secureConnect', () => finish('established', {
+    protocol: socket.getProtocol(),
+    authorized: socket.authorized,
+    authorizationError: socket.authorizationError,
+  }));
+  socket.once('error', (error) => finish('error', {
+    code: error.code || error.name,
+    message: sanitizeDiagnosticText(error.message),
+  }));
+});
+
 const getSafeConnectionOptions = (scheme, uriOptions, txtRecords = []) => {
   const options = new Map();
 
@@ -73,6 +104,24 @@ const getSafeConnectionOptions = (scheme, uriOptions, txtRecords = []) => {
   }
 
   return safeOptions;
+};
+
+const isTlsEnabled = (scheme, uriOptions, txtRecords = []) => {
+  const options = new Map();
+
+  for (const record of txtRecords) {
+    for (const [key, value] of new URLSearchParams(record.join(''))) {
+      options.set(key, value);
+    }
+  }
+
+  for (const [key, value] of uriOptions) {
+    options.set(key, value);
+  }
+
+  const tlsSetting = options.get('tls') || options.get('ssl');
+  if (tlsSetting !== undefined) return tlsSetting.toLowerCase() === 'true';
+  return scheme === 'mongodb+srv';
 };
 
 const probeMongoNetwork = async (uri) => {
@@ -118,6 +167,22 @@ const probeMongoNetwork = async (uri) => {
   for (const probe of probes) {
     console.log(`MongoDB TCP probe: ${probe.hostname}:${probe.port} ${probe.result}${probe.code ? ` (${probe.code})` : ''}`);
   }
+
+  if (isTlsEnabled(target.scheme, target.options, txtRecords)) {
+    const tlsProbes = await Promise.all(records.map(({ name, port }) => tlsProbe({ hostname: name, port })));
+    for (const probe of tlsProbes) {
+      const details = [
+        probe.protocol && `protocol=${probe.protocol}`,
+        probe.authorized !== undefined && `authorized=${probe.authorized}`,
+        probe.authorizationError && `authorizationError=${probe.authorizationError}`,
+        probe.code && `code=${probe.code}`,
+        probe.message && `message=${probe.message}`,
+      ].filter(Boolean).join('; ');
+      console.log(`MongoDB TLS probe: ${probe.hostname}:${probe.port} ${probe.result}${details ? ` (${details})` : ''}`);
+    }
+  } else {
+    console.log('MongoDB TLS probe: skipped because TLS is disabled by connection options');
+  }
 };
 
 const summarizeMongoError = (error) => {
@@ -148,6 +213,7 @@ const summarizeMongoError = (error) => {
 module.exports = {
   getMongoUriTarget,
   getSafeConnectionOptions,
+  isTlsEnabled,
   probeMongoNetwork,
   sanitizeDiagnosticText,
   summarizeMongoError,

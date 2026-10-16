@@ -2,6 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const {
   getMongoUriTarget,
+  isTlsEnabled,
   sanitizeDiagnosticText,
 } = require('../config/mongoDiagnostics');
 
@@ -15,6 +16,13 @@ test('MongoDB URI diagnostics expose scheme and hostname but not credentials', (
     options: new URLSearchParams(),
   });
   assert.equal(JSON.stringify(target).includes('topsecret'), false);
+  assert.equal(isTlsEnabled(target.scheme, target.options), true);
+});
+
+test('MongoDB TLS diagnostics respect explicit URI options', () => {
+  assert.equal(isTlsEnabled('mongodb+srv', new URLSearchParams('tls=false')), false);
+  assert.equal(isTlsEnabled('mongodb', new URLSearchParams('tls=true')), true);
+  assert.equal(isTlsEnabled('mongodb', new URLSearchParams()), false);
 });
 
 test('MongoDB diagnostic text redacts URI credentials and password parameters', () => {
