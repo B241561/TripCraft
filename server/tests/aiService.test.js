@@ -23,15 +23,18 @@ const tripPlan = {
   localCuisine: [],
 };
 
-const loadAiService = (completion) => {
-  let requestOptions;
+const loadAiService = (completions) => {
+  const requests = [];
+  let completionIndex = 0;
 
   class MockOpenAI {
     constructor() {
       this.chat = {
         completions: {
           create: async (options) => {
-            requestOptions = options;
+            requests.push(options);
+            const completion = completions[Math.min(completionIndex, completions.length - 1)];
+            completionIndex += 1;
             return completion;
           },
         },
@@ -48,7 +51,7 @@ const loadAiService = (completion) => {
 
   try {
     const service = require('../services/aiService');
-    return { ...service, getRequestOptions: () => requestOptions };
+    return { ...service, getRequests: () => requests };
   } finally {
     require.cache[openAiModulePath].exports = OpenAI;
     delete require.cache[aiServicePath];
@@ -59,10 +62,10 @@ const loadAiService = (completion) => {
   }
 };
 
-test('trip generation requests strict JSON and parses the returned plan', async () => {
-  const service = loadAiService({
-    choices: [{ finish_reason: 'stop', message: { content: JSON.stringify(tripPlan) } }],
-  });
+test('trip generation requests JSON mode and parses the returned plan', async () => {
+  const service = loadAiService([
+    { choices: [{ finish_reason: 'stop', message: { content: JSON.stringify(tripPlan) } }] },
+  ]);
 
   const plan = await service.generateTripPlan({
     source: 'Delhi',
@@ -72,43 +75,48 @@ test('trip generation requests strict JSON and parses the returned plan', async 
     numberOfPeople: 2,
     preferences: [],
   });
-  const request = service.getRequestOptions();
+  const request = service.getRequests()[0];
 
   assert.deepEqual(plan, tripPlan);
   assert.equal(request.model, 'openai/gpt-oss-120b');
-  assert.deepEqual(request.response_format, {
-    type: 'json_schema',
-    json_schema: {
-      name: 'trip_plan',
-      strict: true,
-      schema: request.response_format.json_schema.schema,
-    },
-  });
-  assert.equal(request.response_format.json_schema.schema.additionalProperties, false);
+  assert.deepEqual(request.response_format, { type: 'json_object' });
 });
 
-test('trip generation reports malformed provider JSON without a success-shaped result', async () => {
-  const service = loadAiService({
-    choices: [{ finish_reason: 'stop', message: { content: '{"itinerary":' } }],
-  });
+test('trip generation retries an incomplete JSON object and returns the validated retry', async () => {
+  const incompletePlan = {
+    ...tripPlan,
+    topPlaces: [{
+      name: 'Amber Fort',
+      description: 'Historic hilltop fort.',
+      entryFee: '₹100',
+      bestTime: 'Morning',
+      category: 'Heritage',
+    }],
+  };
+  const service = loadAiService([
+    { choices: [{ finish_reason: 'stop', message: { content: JSON.stringify(incompletePlan) } }] },
+    { choices: [{ finish_reason: 'stop', message: { content: JSON.stringify(tripPlan) } }] },
+  ]);
 
-  await assert.rejects(
-    service.generateTripPlan({
-      source: 'Delhi',
-      destination: 'Jaipur',
-      budget: 15000,
-      numberOfDays: 5,
-      numberOfPeople: 2,
-      preferences: [],
-    }),
-    { message: 'Groq returned invalid JSON for the trip plan' },
-  );
+  const plan = await service.generateTripPlan({
+    source: 'Delhi',
+    destination: 'Jaipur',
+    budget: 15000,
+    numberOfDays: 5,
+    numberOfPeople: 2,
+    preferences: [],
+  });
+  const requests = service.getRequests();
+
+  assert.deepEqual(plan, tripPlan);
+  assert.equal(requests.length, 2);
+  assert.match(requests[1].messages[0].content, /topPlaces\[0\]\.mustSee is required/);
 });
 
 test('trip generation reports provider truncation explicitly', async () => {
-  const service = loadAiService({
-    choices: [{ finish_reason: 'length', message: { content: JSON.stringify(tripPlan) } }],
-  });
+  const service = loadAiService([
+    { choices: [{ finish_reason: 'length', message: { content: JSON.stringify(tripPlan) } }] },
+  ]);
 
   await assert.rejects(
     service.generateTripPlan({
