@@ -648,8 +648,18 @@ separately hosted frontend, set it to the real backend origin plus `/api`
 when building. Set the backend's `FRONTEND_URL` to the exact frontend
 origin; neither setting contains a secret.
 
-No public frontend or backend URL has been assigned to this checkout. Do
-not treat a placeholder as a live deployment address.
+The currently verified Render deployment is:
+
+- Frontend: [https://tripcraft-frontend-c8qp.onrender.com/](https://tripcraft-frontend-c8qp.onrender.com/)
+- Backend: [https://tripcraft-backend-qxji.onrender.com/](https://tripcraft-backend-qxji.onrender.com/)
+- Health: [https://tripcraft-backend-qxji.onrender.com/api/health](https://tripcraft-backend-qxji.onrender.com/api/health)
+- Prometheus metrics: [https://tripcraft-backend-qxji.onrender.com/metrics](https://tripcraft-backend-qxji.onrender.com/metrics)
+
+These endpoints were checked during the submission audit. The Render
+frontend serves client-side routes such as `/plan` through the SPA fallback.
+The screenshot below is genuine evidence from the public frontend:
+
+![TripCraft public Render deployment](docs/deployment.png)
 
 ### Kubernetes (local kind)
 
@@ -674,19 +684,22 @@ Open `http://localhost:3003` while the port-forward command is running.
 The ConfigMap's `FRONTEND_URL` is set for that local port-forward; change
 it to the actual frontend origin before exposing the service elsewhere.
 
-The current pod evidence is saved in `docs/kubernetes-pods.png`.
+The pod evidence snapshot is saved in [docs/kubernetes-pods.png](docs/kubernetes-pods.png).
+It records a point-in-time local `kind-tripcraft` cluster view; it is not
+evidence of Render or Kubernetes hosting the public application. The
+manifests use the published GHCR image tag `20261016-e45f1c4`.
+
+The Prometheus scrape configuration in `monitoring/prometheus.yml` targets
+a local backend, and `monitoring/grafana-dashboard.json` defines the
+application dashboard. These are repository artifacts for local monitoring,
+not public Prometheus or Grafana services.
 
 ### Render deployment
 
-The root `render.yaml` Blueprint defines a Free-tier Docker backend and
-static frontend. Create the Blueprint from the course repository's `main`
-branch in Render. During initial Blueprint setup, enter `MONGO_URI` and
-`GROQ_API_KEY` directly into Render's secure secret prompts; the Blueprint
-does not store their values. Render generates `JWT_SECRET`.
-
-After Render assigns the static site's URL, add that exact origin as the
-backend's `FRONTEND_URL` environment variable and redeploy. Configure the
-MongoDB Atlas Network Access list for the backend service's actual Render
-outbound IP ranges; do not allow all IPs as a shortcut. The Free web service
-can spin down while idle. Do not report a public deployment until its health
-and metrics endpoints and the frontend are verified.
+The root `render.yaml` Blueprint defines a Free-tier Docker backend and a
+static frontend. The deployed frontend and backend are available at the
+verified URLs above. During Blueprint setup, provide `MONGO_URI` and
+`GROQ_API_KEY` through Render's secure secret prompts; the Blueprint does
+not store their values. Render generates `JWT_SECRET`. Keep the backend's
+`FRONTEND_URL` set to the exact deployed frontend origin. The Free web
+service can spin down while idle.
