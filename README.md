@@ -29,6 +29,9 @@
 
 </div>
 
+> **Live demo:** [Open TripCraft](https://tripcraft-frontend-c8qp.onrender.com/) ·
+> [Plan a trip](https://tripcraft-frontend-c8qp.onrender.com/plan)
+
 ## 🌍 Overview
 
 **TripCraft** is a full-stack, AI-powered travel planning platform that transforms a few travel preferences into a structured journey. Enter a **source, destination, budget, duration, number of travelers, and preferences**, and TripCraft generates a personalized travel experience with:
@@ -689,6 +692,23 @@ It records a point-in-time local `kind-tripcraft` cluster view; it is not
 evidence of Render or Kubernetes hosting the public application. The
 manifests use the published GHCR image tag `20261016-e45f1c4`.
 
+### Published Container Images
+
+The Kubernetes manifests reference these published GitHub Container Registry
+images:
+
+- Backend: `ghcr.io/skit-devops-2026/tripcraft-backend:20261016-e45f1c4`
+- Frontend: `ghcr.io/skit-devops-2026/tripcraft-frontend:20261016-e45f1c4`
+
+The packages are currently private. Authenticate to GHCR with a GitHub
+account that has `read:packages` access before pulling:
+
+```sh
+docker login ghcr.io
+docker pull ghcr.io/skit-devops-2026/tripcraft-backend:20261016-e45f1c4
+docker pull ghcr.io/skit-devops-2026/tripcraft-frontend:20261016-e45f1c4
+```
+
 The Prometheus scrape configuration in `monitoring/prometheus.yml` targets
 a local backend, and `monitoring/grafana-dashboard.json` defines the
 application dashboard. These are repository artifacts for local monitoring,
@@ -702,4 +722,5 @@ verified URLs above. During Blueprint setup, provide `MONGO_URI` and
 `GROQ_API_KEY` through Render's secure secret prompts; the Blueprint does
 not store their values. Render generates `JWT_SECRET`. Keep the backend's
 `FRONTEND_URL` set to the exact deployed frontend origin. The Free web
-service can spin down while idle.
+service can spin down while idle, so its first request after an idle period
+may receive a temporary warming-up response before the backend is available.
