@@ -32,6 +32,10 @@
 > **Live demo:** [Open TripCraft](https://tripcraft-frontend-c8qp.onrender.com/) ·
 > [Plan a trip](https://tripcraft-frontend-c8qp.onrender.com/plan)
 
+## Live URL
+
+https://tripcraft-frontend-c8qp.onrender.com/
+
 ## 🌍 Overview
 
 **TripCraft** is a full-stack, AI-powered travel planning platform that transforms a few travel preferences into a structured journey. Enter a **source, destination, budget, duration, number of travelers, and preferences**, and TripCraft generates a personalized travel experience with:
