@@ -116,7 +116,8 @@ test('trip generation requests strict JSON schema and parses the returned plan',
   assert.equal(request.response_format.json_schema.name, 'trip_plan');
   assert.equal(request.response_format.json_schema.strict, true);
   assert.equal(request.response_format.json_schema.schema.additionalProperties, false);
-  assert.equal(request.max_completion_tokens, 8192);
+  assert.equal(request.reasoning_effort, 'low');
+  assert.equal(request.max_completion_tokens, 16384);
 });
 
 test('trip generation retries an incomplete JSON object and returns the validated retry', async () => {

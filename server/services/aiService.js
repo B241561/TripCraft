@@ -315,7 +315,8 @@ Rules:
       model: process.env.GROQ_MODEL || 'openai/gpt-oss-120b',
       messages: [{ role: 'user', content }],
       temperature: 0.2,
-      max_completion_tokens: 8192,
+      reasoning_effort: 'low',
+      max_completion_tokens: 16384,
       response_format: {
         type: 'json_schema',
         json_schema: {
@@ -382,14 +383,23 @@ Rules:
   };
 
   let requestPrompt = prompt;
-  for (let attempt = 0; attempt < 2; attempt += 1) {
+  const maxAttempts = 3;
+  for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
     try {
       return parsePlan(await requestPlan(requestPrompt));
     } catch (error) {
+      console.error('Trip plan generation attempt failed', {
+        attempt: attempt + 1,
+        status: error.status,
+        message: error.message,
+        failedGeneration: typeof error.error?.failed_generation === 'string'
+          ? error.error.failed_generation.slice(-400)
+          : undefined,
+      });
       const retryableProviderError =
         error.status === 400 &&
         /failed to generate json|generated json does not match the expected schema/i.test(error.message);
-      if (attempt === 1 || (error.code !== 'TRIP_PLAN_FORMAT' && !retryableProviderError)) {
+      if (attempt === maxAttempts - 1 || (error.code !== 'TRIP_PLAN_FORMAT' && !retryableProviderError)) {
         throw error;
       }
 
