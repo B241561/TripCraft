@@ -114,25 +114,12 @@ A focused React interface built around the travel-planning workflow.
 
 ---
 
-## Technical Proof
+## Workflow
 
-### 1
+Watch the full walkthrough (unlisted video):
 
-<img width="1917" height="918" alt="image" src="https://github.com/user-attachments/assets/464da9db-7132-4ff5-9cd3-58699e434de1" />
-
-<br></br>
-
-### 2
-
-<img width="1917" height="1026" alt="image" src="https://github.com/user-attachments/assets/856f0818-0edd-4ee1-a3db-9a2150c5d917" />
-
-<br></br>
-
-### 3
-
-<img width="1917" height="1020" alt="image" src="https://github.com/user-attachments/assets/c7714ffa-54e7-444f-bd78-4fb8caf8e823" />
-
----
+[![AI Resume Analyzer Workflow](https://img.youtube.com/vi/mbyUxWVvyhA/maxresdefault.jpg)](https://youtu.be/5x4SO8GRVZE)
+> Click the thumbnail to watch on YouTube.
 
 ## 🧠 AI Architecture
 
