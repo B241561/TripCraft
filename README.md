@@ -113,13 +113,17 @@ A focused React interface built around the travel-planning workflow.
 <img width="1024" height="572" alt="6be38399-02ff-4ba5-9154-2ca2177e2cc2" src="https://github.com/user-attachments/assets/84924c99-2f5f-4bf5-b935-37d8feab1024" />
 
 ---
-
-## Workflow
+## 🎬 Workflow
 
 Watch the full walkthrough (unlisted video):
 
-[![AI Resume Analyzer Workflow](https://img.youtube.com/vi/mbyUxWVvyhA/maxresdefault.jpg)](https://youtu.be/5x4SO8GRVZE)
+[![TripCraft Workflow](https://img.youtube.com/vi/5x4SO8GRVZE/maxresdefault.jpg)](https://youtu.be/5x4SO8GRVZE)
+
 > Click the thumbnail to watch on YouTube.
+
+---
+
+## 🧠 AI Architecture
 
 ## 🧠 AI Architecture
 
