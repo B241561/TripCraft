@@ -27,11 +27,11 @@ const getCheckoutStr = () => {
 };
 
 export const platformConfig = {
-  redbus: { name: 'RedBus', color: '#D84E55', bg: 'rgba(216,78,85,0.1)' },
-  railyatri: { name: 'RailYatri', color: '#2563EB', bg: 'rgba(37,99,235,0.1)' },
-  makemytrip: { name: 'MakeMyTrip', color: '#E8523A', bg: 'rgba(232,82,58,0.1)' },
-  olacabs: { name: 'Ola Cabs', color: '#4CAF50', bg: 'rgba(76,175,80,0.1)' },
-  irctc: { name: 'IRCTC', color: '#1565C0', bg: 'rgba(21,101,192,0.1)' },
+  redbus: { name: 'RedBus', color: 'var(--text)', bg: 'var(--surface-hover)' },
+  railyatri: { name: 'RailYatri', color: 'var(--text)', bg: 'var(--surface-hover)' },
+  makemytrip: { name: 'MakeMyTrip', color: 'var(--text)', bg: 'var(--surface-hover)' },
+  olacabs: { name: 'Ola Cabs', color: 'var(--text)', bg: 'var(--surface-hover)' },
+  irctc: { name: 'IRCTC', color: 'var(--text)', bg: 'var(--surface-hover)' },
 };
 
 export const transportIcons = {

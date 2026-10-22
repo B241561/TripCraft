@@ -12,7 +12,7 @@ export default function Register() {
   const [error, setError] = useState('');
   const [showPass, setShowPass] = useState(false);
 
-  const inputStyle = { width: '100%', padding: '13px 16px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: 10, color: 'var(--text)', fontSize: 15, outline: 'none', transition: 'border 0.2s' };
+  const inputStyle = { width: '100%', padding: '13px 16px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, color: 'var(--text)', fontSize: 15, outline: 'none', transition: 'border-color 0.2s' };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,17 +29,13 @@ export default function Register() {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '80px 24px 40px' }}>
-      <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
-        <div style={{ position: 'absolute', top: '30%', right: '20%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(201,168,76,0.05) 0%, transparent 70%)' }} />
-      </div>
-
-      <div style={{ width: '100%', maxWidth: 440, position: 'relative', zIndex: 1 }}>
+      <div style={{ width: '100%', maxWidth: 440 }}>
         <div style={{ textAlign: 'center', marginBottom: 36 }}>
-          <div style={{ width: 52, height: 52, borderRadius: 14, background: 'linear-gradient(135deg, var(--gold), var(--gold-light))', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
-            <Compass size={26} color="#0A0800" strokeWidth={2.5} />
+          <div style={{ width: 52, height: 52, borderRadius: 12, background: 'var(--text)', color: 'var(--bg)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+            <Compass size={26} strokeWidth={2} />
           </div>
           <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 32, fontWeight: 800, marginBottom: 6 }}>
-            Join <span className="gold-text">TripCraft</span>
+            Join             TripCraft
           </h1>
           <p style={{ color: 'var(--text-muted)', fontSize: 15 }}>Create your free account and start planning</p>
         </div>
@@ -57,7 +53,7 @@ export default function Register() {
                   value={form[field.key]}
                   onChange={e => setForm(f => ({ ...f, [field.key]: e.target.value }))}
                   style={inputStyle}
-                  onFocus={e => e.target.style.borderColor = 'var(--gold)'}
+                  onFocus={e => e.target.style.borderColor = 'var(--text)'}
                   onBlur={e => e.target.style.borderColor = 'var(--border)'}
                 />
               </div>
@@ -71,7 +67,7 @@ export default function Register() {
                   value={form.password}
                   onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
                   style={{ ...inputStyle, paddingRight: 44 }}
-                  onFocus={e => e.target.style.borderColor = 'var(--gold)'}
+                  onFocus={e => e.target.style.borderColor = 'var(--text)'}
                   onBlur={e => e.target.style.borderColor = 'var(--border)'}
                 />
                 <button type="button" onClick={() => setShowPass(!showPass)}
@@ -82,7 +78,7 @@ export default function Register() {
             </div>
 
             {error && (
-              <div style={{ padding: '10px 14px', borderRadius: 8, background: 'rgba(232,85,85,0.1)', border: '1px solid rgba(232,85,85,0.3)', color: 'var(--error)', fontSize: 13, marginBottom: 20 }}>
+              <div style={{ padding: '10px 14px', borderRadius: 8, background: 'var(--surface-hover)', border: '1px solid var(--border)', color: 'var(--text)', fontSize: 13, marginBottom: 20 }}>
                 {error}
               </div>
             )}
@@ -95,7 +91,7 @@ export default function Register() {
 
         <p style={{ textAlign: 'center', marginTop: 20, color: 'var(--text-muted)', fontSize: 14 }}>
           Already have an account?{' '}
-          <Link to="/login" style={{ color: 'var(--gold)', fontWeight: 600 }}>Sign in</Link>
+          <Link to="/login" style={{ color: 'var(--text)', fontWeight: 600 }}>Sign in</Link>
         </p>
       </div>
     </div>

@@ -29,12 +29,11 @@ export default function MyTrips() {
     setDeleting(null);
   };
 
-  const budgeCategoryStyle = { budget: { bg: 'rgba(104,211,145,0.1)', color: '#68D391' }, 'mid-range': { bg: 'rgba(201,168,76,0.1)', color: '#C9A84C' }, luxury: { bg: 'rgba(183,148,244,0.1)', color: '#B794F4' } };
+  const budgeCategoryStyle = { budget: { bg: 'var(--surface-hover)', color: 'var(--text-muted)' }, 'mid-range': { bg: 'var(--surface-hover)', color: 'var(--text-muted)' }, luxury: { bg: 'var(--surface-hover)', color: 'var(--text)' } };
 
   if (loading) return (
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <div style={{ width: 48, height: 48, borderRadius: '50%', border: '3px solid var(--border)', borderTopColor: 'var(--gold)', animation: 'spin 1s linear infinite' }} />
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      <div style={{ width: 48, height: 48, borderRadius: 12, border: '1px solid var(--border)', background: 'var(--surface)' }} />
     </div>
   );
 
@@ -43,7 +42,7 @@ export default function MyTrips() {
       <div className="container">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 40, flexWrap: 'wrap', gap: 16 }}>
           <div>
-            <p style={{ fontSize: 12, fontWeight: 600, color: 'var(--gold)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 8 }}>Your Journey Log</p>
+            <p style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 8 }}>Your Journey Log</p>
             <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(26px, 5vw, 44px)', fontWeight: 800 }}>
               My <span className="gold-text">Trips</span>
             </h1>
@@ -63,7 +62,7 @@ export default function MyTrips() {
             </button>
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 20 }}>
+          <div className="home-card-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 20 }}>
             {trips.map((trip, idx) => {
               const catStyle = budgeCategoryStyle[trip.budgetCategory] || budgeCategoryStyle['mid-range'];
               const date = new Date(trip.createdAt);
@@ -73,8 +72,8 @@ export default function MyTrips() {
                 <div
                   key={trip._id}
                   className="glass-card"
-                  style={{ padding: '24px', transition: 'all 0.3s ease', cursor: 'pointer', animation: `fadeIn 0.4s ${idx * 0.08}s ease both`, opacity: 0, position: 'relative' }}
-                  onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.borderColor = 'var(--border-gold)'; }}
+                  style={{ padding: '24px', transition: 'all 0.2s ease', cursor: 'pointer', position: 'relative' }}
+                  onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.borderColor = 'var(--text-muted)'; }}
                   onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.borderColor = 'var(--border)'; }}
                   onClick={() => navigate(`/result/${trip._id}`)}
                 >
@@ -82,18 +81,18 @@ export default function MyTrips() {
                   <button
                     onClick={e => { e.stopPropagation(); handleDelete(trip._id); }}
                     disabled={deleting === trip._id}
-                    style={{ position: 'absolute', top: 16, right: 16, width: 30, height: 30, borderRadius: 8, background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-dim)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s', zIndex: 2 }}
-                    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(232,85,85,0.12)'; e.currentTarget.style.color = 'var(--error)'; e.currentTarget.style.borderColor = 'rgba(232,85,85,0.3)'; }}
+                    style={{ position: 'absolute', top: 16, right: 16, width: 30, height: 30, borderRadius: 8, background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s', zIndex: 2 }}
+                    onMouseEnter={e => { e.currentTarget.style.background = 'var(--surface-hover)'; e.currentTarget.style.color = 'var(--text)'; e.currentTarget.style.borderColor = 'var(--text-muted)'; }}
                     onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--text-dim)'; e.currentTarget.style.borderColor = 'var(--border)'; }}>
                     <Trash2 size={13} />
                   </button>
 
                   {/* Destination emoji & route */}
                   <div style={{ marginBottom: 16 }}>
-                    <div style={{ fontSize: 36, marginBottom: 10 }}>✈️</div>
+                    <div style={{ fontSize: 28, marginBottom: 10 }}>✈️</div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
                       <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 700 }}>{trip.destination}</h3>
-                      <span style={{ padding: '2px 8px', borderRadius: 20, fontSize: 11, fontWeight: 700, background: catStyle.bg, color: catStyle.color }}>
+                      <span style={{ padding: '3px 8px', borderRadius: 8, fontSize: 11, fontWeight: 650, background: catStyle.bg, color: catStyle.color }}>
                         {trip.budgetCategory}
                       </span>
                     </div>
@@ -111,7 +110,7 @@ export default function MyTrips() {
                       { icon: <Wallet size={12} />, label: 'Budget', val: formatCurrency(trip.budget) },
                       { icon: null, label: 'Created', val: dateStr },
                     ].map((item, i) => (
-                      <div key={i} style={{ padding: '10px 12px', borderRadius: 8, background: 'var(--surface)' }}>
+                      <div key={i} style={{ padding: '10px 12px', borderRadius: 8, background: 'var(--bg)', border: '1px solid var(--border)' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 10, color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 4 }}>
                           {item.icon} {item.label}
                         </div>
@@ -129,7 +128,6 @@ export default function MyTrips() {
           </div>
         )}
       </div>
-      <style>{`@keyframes fadeIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }`}</style>
     </div>
   );
 }
