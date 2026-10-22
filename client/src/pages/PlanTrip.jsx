@@ -42,16 +42,11 @@ export default function PlanTrip() {
     }
   };
 
-  const inputStyle = { width: '100%', padding: '14px 16px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: 10, color: 'var(--text)', fontSize: 15, outline: 'none', transition: 'border 0.2s' };
+  const inputStyle = { width: '100%', padding: '14px 16px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, color: 'var(--text)', fontSize: 15, outline: 'none', transition: 'border-color 0.2s' };
 
   return (
     <div style={{ minHeight: '100vh', paddingTop: 90, paddingBottom: 60 }}>
-      {/* BG decoration */}
-      <div style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }}>
-        <div style={{ position: 'absolute', top: '20%', right: '10%', width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%)' }} />
-      </div>
-
-      <div className="container" style={{ maxWidth: 680, position: 'relative', zIndex: 1 }}>
+      <div className="container" style={{ maxWidth: 680 }}>
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
           <p style={{ fontSize: 12, fontWeight: 600, color: 'var(--gold)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>AI Travel Planner</p>
@@ -64,10 +59,10 @@ export default function PlanTrip() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 40, gap: 0 }}>
           {[1, 2, 3].map((s, i) => (
             <div key={s} style={{ display: 'flex', alignItems: 'center' }}>
-              <div style={{ width: 38, height: 38, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 14, background: step >= s ? 'linear-gradient(135deg, var(--gold), var(--gold-light))' : 'var(--surface)', color: step >= s ? '#0A0800' : 'var(--text-muted)', border: step >= s ? 'none' : '1px solid var(--border)', transition: 'all 0.3s ease' }}>
+              <div style={{ width: 38, height: 38, borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 14, background: step >= s ? 'var(--text)' : 'var(--surface)', color: step >= s ? 'var(--bg)' : 'var(--text-muted)', border: '1px solid var(--border)', transition: 'all 0.2s ease' }}>
                 {s}
               </div>
-              {i < 2 && <div style={{ width: 80, height: 2, background: step > s ? 'linear-gradient(90deg, var(--gold), var(--gold-light))' : 'var(--border)', transition: 'background 0.4s ease' }} />}
+              {i < 2 && <div style={{ width: 80, height: 1, background: step > s ? 'var(--text)' : 'var(--border)', transition: 'background 0.2s ease' }} />}
             </div>
           ))}
         </div>
@@ -80,11 +75,11 @@ export default function PlanTrip() {
         </div>
 
         {/* Card */}
-        <div className="glass-card" style={{ padding: '36px 40px' }}>
+        <div className="glass-card form-card" style={{ padding: '32px' }}>
 
           {/* Step 1: Route */}
           {step === 1 && (
-            <div style={{ animation: 'fadeIn 0.4s ease both' }}>
+            <div style={{ animation: 'page-enter 220ms ease-out both' }}>
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 24, fontWeight: 700, marginBottom: 28 }}>
                 <MapPin size={20} color="var(--gold)" style={{ marginRight: 8, verticalAlign: 'middle' }} />
                 Where are you travelling?
@@ -102,7 +97,7 @@ export default function PlanTrip() {
                   onBlur={e => { e.target.style.borderColor = 'var(--border)'; setTimeout(() => setSourceQuery(''), 200); }}
                 />
                 {filteredSource.length > 0 && (
-                  <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 100, background: '#0F1526', border: '1px solid var(--border)', borderRadius: 10, marginTop: 4, overflow: 'hidden' }}>
+                  <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 100, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, marginTop: 4, overflow: 'hidden' }}>
                     {filteredSource.map(city => (
                       <div key={city} style={{ padding: '10px 16px', cursor: 'pointer', fontSize: 14, transition: 'background 0.15s' }}
                         onMouseEnter={e => e.currentTarget.style.background = 'var(--surface-hover)'}
@@ -127,7 +122,7 @@ export default function PlanTrip() {
                   onBlur={e => { e.target.style.borderColor = 'var(--border)'; setTimeout(() => setDestQuery(''), 200); }}
                 />
                 {filteredDest.length > 0 && (
-                  <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 100, background: '#0F1526', border: '1px solid var(--border)', borderRadius: 10, marginTop: 4, overflow: 'hidden' }}>
+                  <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 100, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, marginTop: 4, overflow: 'hidden' }}>
                     {filteredDest.map(city => (
                       <div key={city} style={{ padding: '10px 16px', cursor: 'pointer', fontSize: 14, transition: 'background 0.15s' }}
                         onMouseEnter={e => e.currentTarget.style.background = 'var(--surface-hover)'}
@@ -144,7 +139,7 @@ export default function PlanTrip() {
 
           {/* Step 2: Budget, Days, People */}
           {step === 2 && (
-            <div style={{ animation: 'fadeIn 0.4s ease both' }}>
+            <div style={{ animation: 'page-enter 220ms ease-out both' }}>
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 24, fontWeight: 700, marginBottom: 28 }}>
                 <Wallet size={20} color="var(--gold)" style={{ marginRight: 8, verticalAlign: 'middle' }} />
                 Trip Details
@@ -172,7 +167,7 @@ export default function PlanTrip() {
               </div>
 
               {/* Days & People */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+              <div className="form-two-column" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
                 <div>
                   <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>
                     <Calendar size={12} style={{ verticalAlign: 'middle', marginRight: 4 }} /> Number of Days
@@ -210,7 +205,7 @@ export default function PlanTrip() {
 
           {/* Step 3: Preferences */}
           {step === 3 && (
-            <div style={{ animation: 'fadeIn 0.4s ease both' }}>
+            <div style={{ animation: 'page-enter 220ms ease-out both' }}>
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 24, fontWeight: 700, marginBottom: 8 }}>
                 <Sparkles size={20} color="var(--gold)" style={{ marginRight: 8, verticalAlign: 'middle' }} />
                 Your Travel Style
@@ -222,7 +217,7 @@ export default function PlanTrip() {
                   <button
                     key={p}
                     onClick={() => togglePref(p)}
-                    style={{ padding: '8px 16px', borderRadius: 100, border: `1px solid ${form.preferences.includes(p) ? 'var(--gold)' : 'var(--border)'}`, background: form.preferences.includes(p) ? 'var(--gold-dim)' : 'var(--surface)', color: form.preferences.includes(p) ? 'var(--gold)' : 'var(--text-muted)', fontSize: 13, fontWeight: 500, transition: 'all 0.2s', cursor: 'pointer' }}>
+                    style={{ padding: '8px 12px', borderRadius: 8, border: `1px solid ${form.preferences.includes(p) ? 'var(--text)' : 'var(--border)'}`, background: form.preferences.includes(p) ? 'var(--surface-hover)' : 'var(--surface)', color: form.preferences.includes(p) ? 'var(--text)' : 'var(--text-muted)', fontSize: 13, fontWeight: 500, transition: 'all 0.2s', cursor: 'pointer' }}>
                     {form.preferences.includes(p) ? '✓ ' : ''}{p}
                   </button>
                 ))}
@@ -272,7 +267,7 @@ export default function PlanTrip() {
               </button>
             ) : (
               <button onClick={handleSubmit} disabled={loading} className="btn btn-gold" style={{ padding: '12px 28px', opacity: loading ? 0.8 : 1 }}>
-                {loading ? <><Loader size={16} style={{ animation: 'spin 1s linear infinite' }} /> Generating Plan...</> : <><Sparkles size={16} /> Generate My Trip</>}
+                {loading ? <><Loader size={16} /> Generating Plan...</> : <><Sparkles size={16} /> Generate My Trip</>}
               </button>
             )}
           </div>
@@ -282,18 +277,16 @@ export default function PlanTrip() {
 
       {/* Loading overlay */}
       {loading && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 9000, background: 'rgba(8,12,24,0.92)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 20 }}>
-          <div style={{ width: 64, height: 64, borderRadius: '50%', border: '3px solid var(--border)', borderTopColor: 'var(--gold)', animation: 'spin 1s linear infinite' }} />
+        <div style={{ position: 'fixed', inset: 0, zIndex: 9000, background: 'var(--bg)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 20 }}>
+          <div style={{ width: 48, height: 48, borderRadius: 12, border: '1px solid var(--border)', background: 'var(--surface)' }} />
           <p style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 700 }}>Crafting your <span className="gold-text">perfect trip</span>...</p>
           <p style={{ color: 'var(--text-muted)', fontSize: 14 }}>AI is planning your itinerary, hotels & transport</p>
         </div>
       )}
 
       <style>{`
-        @keyframes fadeIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes spin { to { transform: rotate(360deg); } }
         input[type=range] { -webkit-appearance: none; background: var(--border); border-radius: 4px; }
-        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, var(--gold), var(--gold-light)); cursor: pointer; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 8px; background: var(--text); cursor: pointer; }
       `}</style>
     </div>
   );

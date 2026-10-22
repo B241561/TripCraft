@@ -35,7 +35,12 @@ const generateTrip = async (req, res) => {
 
     res.status(201).json(trip);
   } catch (error) {
-    console.error('Trip generation error:', error);
+    console.error('Trip generation error:', {
+      name: error.name,
+      status: error.status,
+      code: error.code,
+      message: error.message,
+    });
     res.status(500).json({ message: error.message || 'Failed to generate trip plan' });
   }
 };

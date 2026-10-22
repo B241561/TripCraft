@@ -1,6 +1,24 @@
 import axios from 'axios';
 
-const API = axios.create({ baseURL: '/api' });
+const configuredApiUrl = import.meta.env.VITE_API_URL;
+
+export const normalizeApiBaseUrl = (apiUrl) => {
+  if (!apiUrl) return '/api';
+  if (apiUrl.startsWith('/')) return apiUrl.replace(/\/+$/, '');
+
+  const parsedUrl = new URL(apiUrl.startsWith('http') ? apiUrl : `https://${apiUrl}`);
+  const hostname = parsedUrl.hostname;
+  if (hostname !== 'localhost' && !hostname.includes('.') && !hostname.includes(':')) {
+    parsedUrl.hostname = `${hostname}.onrender.com`;
+  }
+
+  const basePath = parsedUrl.pathname.replace(/\/+$/, '').replace(/\/api$/, '');
+  return `${parsedUrl.origin}${basePath}/api`;
+};
+
+const apiBaseUrl = normalizeApiBaseUrl(configuredApiUrl);
+
+const API = axios.create({ baseURL: apiBaseUrl });
 
 API.interceptors.request.use((config) => {
   const token = localStorage.getItem('tripcraft_token');

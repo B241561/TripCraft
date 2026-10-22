@@ -7,6 +7,184 @@ const groq = process.env.GROQ_API_KEY
     })
   : null;
 
+const tripPlanSchema = {
+  type: 'object',
+  properties: {
+    itinerary: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          day: { type: 'integer' },
+          title: { type: 'string' },
+          theme: { type: 'string' },
+          activities: { type: 'array', items: { type: 'string' } },
+        },
+        required: ['day', 'title', 'theme', 'activities'],
+        additionalProperties: false,
+      },
+    },
+    hotels: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+          area: { type: 'string' },
+          pricePerNight: { type: 'number' },
+          totalPrice: { type: 'number' },
+          rating: { type: 'number' },
+          amenities: { type: 'array', items: { type: 'string' } },
+          platform: { type: 'string' },
+          bookingUrl: { type: 'string' },
+          highlight: { type: 'string' },
+        },
+        required: [
+          'name',
+          'area',
+          'pricePerNight',
+          'totalPrice',
+          'rating',
+          'amenities',
+          'platform',
+          'bookingUrl',
+          'highlight',
+        ],
+        additionalProperties: false,
+      },
+    },
+    transport: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          mode: { type: 'string' },
+          provider: { type: 'string' },
+          estimatedCostPerPerson: { type: 'number' },
+          totalCost: { type: 'number' },
+          duration: { type: 'string' },
+          platform: { type: 'string' },
+          bookingUrl: { type: 'string' },
+          pros: { type: 'array', items: { type: 'string' } },
+          departureInfo: { type: 'string' },
+        },
+        required: [
+          'mode',
+          'provider',
+          'estimatedCostPerPerson',
+          'totalCost',
+          'duration',
+          'platform',
+          'bookingUrl',
+          'pros',
+          'departureInfo',
+        ],
+        additionalProperties: false,
+      },
+    },
+    topPlaces: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+          description: { type: 'string' },
+          entryFee: { type: 'string' },
+          bestTime: { type: 'string' },
+          category: { type: 'string' },
+          mustSee: { type: 'boolean' },
+        },
+        required: [
+          'name',
+          'description',
+          'entryFee',
+          'bestTime',
+          'category',
+          'mustSee',
+        ],
+        additionalProperties: false,
+      },
+    },
+    totalEstimatedCost: { type: 'number' },
+    costBreakdown: {
+      type: 'object',
+      properties: {
+        transport: { type: 'number' },
+        accommodation: { type: 'number' },
+        food: { type: 'number' },
+        activities: { type: 'number' },
+        miscellaneous: { type: 'number' },
+      },
+      required: [
+        'transport',
+        'accommodation',
+        'food',
+        'activities',
+        'miscellaneous',
+      ],
+      additionalProperties: false,
+    },
+    tips: { type: 'array', items: { type: 'string' } },
+    bestTimeToVisit: { type: 'string' },
+    localCuisine: { type: 'array', items: { type: 'string' } },
+  },
+  required: [
+    'itinerary',
+    'hotels',
+    'transport',
+    'topPlaces',
+    'totalEstimatedCost',
+    'costBreakdown',
+    'tips',
+    'bestTimeToVisit',
+    'localCuisine',
+  ],
+  additionalProperties: false,
+};
+
+const createPlanFormatError = (message) => {
+  const error = new Error(message);
+  error.code = 'TRIP_PLAN_FORMAT';
+  return error;
+};
+
+const getSchemaErrors = (value, schema, path = '$') => {
+  const matchesType = {
+    object: value !== null && typeof value === 'object' && !Array.isArray(value),
+    array: Array.isArray(value),
+    string: typeof value === 'string',
+    number: typeof value === 'number',
+    integer: Number.isInteger(value),
+    boolean: typeof value === 'boolean',
+  };
+
+  if (!matchesType[schema.type]) return [`${path} must be ${schema.type}`];
+
+  if (schema.type === 'array') {
+    return value.flatMap((item, index) =>
+      getSchemaErrors(item, schema.items, `${path}[${index}]`),
+    );
+  }
+
+  if (schema.type !== 'object') return [];
+
+  const errors = [];
+  for (const key of schema.required || []) {
+    if (!Object.hasOwn(value, key)) errors.push(`${path}.${key} is required`);
+  }
+  for (const [key, child] of Object.entries(value)) {
+    const childSchema = schema.properties[key];
+    if (!childSchema) {
+      if (schema.additionalProperties === false) {
+        errors.push(`${path}.${key} is not allowed`);
+      }
+      continue;
+    }
+    errors.push(...getSchemaErrors(child, childSchema, `${path}.${key}`));
+  }
+  return errors;
+};
+
 const generateTripPlan = async ({
   source,
   destination,
@@ -126,33 +304,107 @@ Rules:
 - Generate exactly 3 hotels (budget, mid-range, premium options)
 - Generate exactly 3 transport options (train, bus, flight) - skip flight if less than 500km
 - Generate exactly 10 top places
+- Include every property shown in the JSON structure in every object; do not omit any property
 - All prices in Indian Rupees (₹)
 - costBreakdown must add up to totalEstimatedCost
 - Use REAL hotel names, train names, and landmarks for ${destination}
 - bookingUrl for hotels should always be: https://www.makemytrip.com/hotels/hotel-listing/?city=${encodeURIComponent(destination)}`;
 
-  const response = await groq.chat.completions.create({
-    model: process.env.GROQ_MODEL || 'openai/gpt-oss-120b',
-    messages: [{ role: 'user', content: prompt }],
-    temperature: 0.7,
-    max_tokens: 4000,
-  });
+  const requestPlan = (content) =>
+    groq.chat.completions.create({
+      model: process.env.GROQ_MODEL || 'openai/gpt-oss-120b',
+      messages: [{ role: 'user', content }],
+      temperature: 0.2,
+      reasoning_effort: 'low',
+      max_completion_tokens: 16384,
+      response_format: {
+        type: 'json_schema',
+        json_schema: {
+          name: 'trip_plan',
+          strict: true,
+          schema: tripPlanSchema,
+        },
+      },
+    });
 
-  const content = response.choices[0].message.content.trim();
-  const cleaned = content.replace(/```json|```/g, '').trim();
-
-  try {
-    const plan = JSON.parse(cleaned);
-    return plan;
-  } catch (e) {
-    // Try to extract JSON from response
-    const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
-
-    if (jsonMatch) {
-      return JSON.parse(jsonMatch[0]);
+  const parsePlan = (response) => {
+    const choice = response.choices?.[0];
+    if (!choice) throw createPlanFormatError('Groq returned no completion choices');
+    if (choice.finish_reason === 'length') {
+      throw createPlanFormatError('Groq returned an incomplete trip plan due to the token limit');
+    }
+    if (choice.message?.refusal) {
+      throw new Error('Groq declined to generate the requested trip plan');
+    }
+    if (typeof choice.message?.content !== 'string' || !choice.message.content.trim()) {
+      throw createPlanFormatError('Groq returned an empty trip plan');
     }
 
-    throw new Error('Failed to parse AI response as JSON');
+    let plan;
+    try {
+      plan = JSON.parse(choice.message.content);
+    } catch {
+      throw createPlanFormatError('Groq returned invalid JSON for the trip plan');
+    }
+
+    const errors = getSchemaErrors(plan, tripPlanSchema);
+    if (errors.length) {
+      throw createPlanFormatError(`Groq returned an incomplete trip plan: ${errors[0]}`);
+    }
+    if (plan.itinerary.length !== numberOfDays) {
+      throw createPlanFormatError(`Groq returned ${plan.itinerary.length} itinerary days instead of ${numberOfDays}`);
+    }
+    if (plan.itinerary.some((day, index) => day.day !== index + 1)) {
+      throw createPlanFormatError('Groq returned itinerary days that are not numbered consecutively');
+    }
+    if (plan.hotels.length !== 3) {
+      throw createPlanFormatError(`Groq returned ${plan.hotels.length} hotels instead of 3`);
+    }
+    if (plan.topPlaces.length !== 10) {
+      throw createPlanFormatError(`Groq returned ${plan.topPlaces.length} top places instead of 10`);
+    }
+    if (plan.transport.length < 2 || plan.transport.length > 3) {
+      throw createPlanFormatError(`Groq returned ${plan.transport.length} transport options; expected 2 or 3`);
+    }
+
+    const breakdownTotal = Object.values(plan.costBreakdown)
+      .reduce((total, amount) => total + amount, 0);
+    if (Math.abs(breakdownTotal - plan.totalEstimatedCost) > 0.01) {
+      throw createPlanFormatError(
+        `The cost breakdown totals ₹${breakdownTotal}, not ₹${plan.totalEstimatedCost}`,
+      );
+    }
+    if (plan.totalEstimatedCost > budget) {
+      throw createPlanFormatError(
+        `The estimated total ₹${plan.totalEstimatedCost} exceeds the ₹${budget} budget`,
+      );
+    }
+    return plan;
+  };
+
+  let requestPrompt = prompt;
+  const maxAttempts = 3;
+  for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+    try {
+      return parsePlan(await requestPlan(requestPrompt));
+    } catch (error) {
+      console.error('Trip plan generation attempt failed', {
+        attempt: attempt + 1,
+        status: error.status,
+        message: error.message,
+        failedGeneration: typeof error.error?.failed_generation === 'string'
+          ? error.error.failed_generation.slice(-400)
+          : undefined,
+      });
+      const retryableProviderError =
+        error.status === 400 &&
+        /failed to generate json|generated json does not match the expected schema/i.test(error.message);
+      if (attempt === maxAttempts - 1 || (error.code !== 'TRIP_PLAN_FORMAT' && !retryableProviderError)) {
+        throw error;
+      }
+
+      requestPrompt = `${prompt}\n\nThe previous response failed validation: ${error.message}. Correct the issue and return the complete trip plan again. Include every required property, exactly ${numberOfDays} consecutive itinerary days, exactly 3 hotels, exactly 10 top places, and ensure the cost breakdown adds up to a total no greater than ₹${budget}.`;
+    }
   }
 };
 

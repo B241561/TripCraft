@@ -32,9 +32,8 @@ export default function TripResult() {
 
   if (loading) return (
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 16 }}>
-      <div style={{ width: 56, height: 56, borderRadius: '50%', border: '3px solid var(--border)', borderTopColor: 'var(--gold)', animation: 'spin 1s linear infinite' }} />
+      <div style={{ width: 48, height: 48, borderRadius: 12, border: '1px solid var(--border)', background: 'var(--surface)' }} />
       <p style={{ color: 'var(--text-muted)' }}>Loading your trip plan...</p>
-      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   );
 
@@ -53,7 +52,7 @@ export default function TripResult() {
   return (
     <div style={{ minHeight: '100vh', paddingTop: 68 }}>
       {/* Hero Header */}
-      <div style={{ background: 'linear-gradient(135deg, rgba(201,168,76,0.08) 0%, rgba(13,17,32,0) 60%)', borderBottom: '1px solid var(--border)', padding: '36px 0 0' }}>
+      <div style={{ background: 'var(--bg)', borderBottom: '1px solid var(--border)', padding: '36px 0 0' }}>
         <div className="container">
           {/* Back button */}
           <button onClick={() => navigate('/plan')} style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--text-muted)', fontSize: 14, background: 'none', border: 'none', cursor: 'pointer', marginBottom: 24, transition: 'color 0.2s' }}
@@ -78,7 +77,7 @@ export default function TripResult() {
 
             {/* Total cost badge */}
             {plan?.totalEstimatedCost && (
-              <div style={{ padding: '16px 24px', borderRadius: 16, background: 'var(--gold-dim)', border: '1px solid var(--border-gold)', textAlign: 'center', flexShrink: 0 }}>
+              <div style={{ padding: '16px 20px', borderRadius: 12, background: 'var(--surface)', border: '1px solid var(--border)', textAlign: 'center', flexShrink: 0 }}>
                 <p style={{ fontSize: 11, color: 'var(--gold)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Estimated Total</p>
                 <p style={{ fontFamily: 'var(--font-display)', fontSize: 28, fontWeight: 800, color: 'var(--gold)' }}>{formatCurrency(plan.totalEstimatedCost)}</p>
                 <p style={{ fontSize: 11, color: 'var(--cream-muted)' }}>for {numberOfPeople} {numberOfPeople === 1 ? 'person' : 'people'}</p>
@@ -94,8 +93,8 @@ export default function TripResult() {
               { icon: <Users size={13} />, text: `${numberOfPeople} ${numberOfPeople === 1 ? 'Traveller' : 'Travellers'}` },
               { icon: <Wallet size={13} />, text: `${formatCurrency(budget)} Budget` },
             ].map((item, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 100, background: 'var(--surface)', border: '1px solid var(--border)', fontSize: 13, color: 'var(--text-muted)' }}>
-                <span style={{ color: 'var(--gold)' }}>{item.icon}</span> {item.text}
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 10px', borderRadius: 8, background: 'var(--surface)', border: '1px solid var(--border)', fontSize: 13, color: 'var(--text-muted)' }}>
+                <span style={{ color: 'var(--text-muted)' }}>{item.icon}</span> {item.text}
               </div>
             ))}
           </div>
@@ -104,7 +103,7 @@ export default function TripResult() {
           {plan?.costBreakdown && (
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 20 }}>
               {Object.entries(plan.costBreakdown).filter(([, v]) => v > 0).map(([key, val]) => (
-                <div key={key} style={{ fontSize: 12, padding: '4px 12px', borderRadius: 20, background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border)', color: 'var(--text-muted)' }}>
+                <div key={key} style={{ fontSize: 12, padding: '4px 8px', borderRadius: 8, background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text-muted)' }}>
                   {key.charAt(0).toUpperCase() + key.slice(1)}: <strong style={{ color: 'var(--cream)' }}>{formatCurrency(val)}</strong>
                 </div>
               ))}
@@ -117,7 +116,7 @@ export default function TripResult() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                style={{ padding: '12px 20px', background: 'none', border: 'none', cursor: 'pointer', borderBottom: `2px solid ${activeTab === tab.id ? 'var(--gold)' : 'transparent'}`, color: activeTab === tab.id ? 'var(--gold)' : 'var(--text-muted)', fontSize: 14, fontWeight: activeTab === tab.id ? 600 : 400, transition: 'all 0.2s', whiteSpace: 'nowrap', fontFamily: 'var(--font-body)' }}>
+                style={{ padding: '12px 16px', background: 'none', border: 'none', cursor: 'pointer', borderBottom: `2px solid ${activeTab === tab.id ? 'var(--text)' : 'transparent'}`, color: activeTab === tab.id ? 'var(--text)' : 'var(--text-muted)', fontSize: 14, fontWeight: activeTab === tab.id ? 600 : 400, transition: 'all 0.2s', whiteSpace: 'nowrap', fontFamily: 'var(--font-body)' }}>
                 {tab.label}
               </button>
             ))}
@@ -126,10 +125,10 @@ export default function TripResult() {
       </div>
 
       {/* Tab content */}
-      <div className="container" style={{ padding: '36px 24px' }}>
+      <div className="container" style={{ paddingTop: 36, paddingBottom: 36 }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: 28, alignItems: 'start' }} className="result-grid">
           {/* Main content */}
-          <div key={activeTab} style={{ animation: 'fadeIn 0.3s ease both' }}>
+          <div key={activeTab} style={{ animation: 'page-enter 220ms ease-out both' }}>
             {activeTab === 'itinerary' && <ItineraryTab itinerary={plan?.itinerary} />}
             {activeTab === 'transport' && <TransportTab transport={plan?.transport} source={source} destination={destination} numberOfPeople={numberOfPeople} />}
             {activeTab === 'hotels' && <HotelsTab hotels={plan?.hotels} destination={destination} />}
@@ -142,13 +141,13 @@ export default function TripResult() {
             {plan?.tips?.length > 0 && (
               <div className="glass-card" style={{ padding: '20px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-                  <Lightbulb size={16} color="var(--gold)" />
+                  <Lightbulb size={16} color="var(--text-muted)" />
                   <h3 style={{ fontWeight: 700, fontSize: 15 }}>Travel Tips</h3>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                   {plan.tips.map((tip, i) => (
                     <div key={i} style={{ display: 'flex', gap: 10, fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.5 }}>
-                      <span style={{ color: 'var(--gold)', flexShrink: 0, marginTop: 1 }}>→</span>
+                      <span style={{ color: 'var(--text-muted)', flexShrink: 0, marginTop: 1 }}>→</span>
                       {tip}
                     </div>
                   ))}
@@ -162,7 +161,7 @@ export default function TripResult() {
                 <h3 style={{ fontWeight: 700, fontSize: 15, marginBottom: 14 }}>🍛 Must-Try Food</h3>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                   {plan.localCuisine.map((dish, i) => (
-                    <span key={i} style={{ padding: '5px 12px', borderRadius: 20, background: 'var(--surface)', border: '1px solid var(--border)', fontSize: 12, color: 'var(--text-muted)' }}>
+                    <span key={i} style={{ padding: '5px 8px', borderRadius: 8, background: 'var(--surface)', border: '1px solid var(--border)', fontSize: 12, color: 'var(--text-muted)' }}>
                       {dish}
                     </span>
                   ))}
@@ -177,7 +176,7 @@ export default function TripResult() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 12px', borderRadius: 8, background: activeTab === tab.id ? 'var(--gold-dim)' : 'none', border: 'none', cursor: 'pointer', marginBottom: 4, color: activeTab === tab.id ? 'var(--gold)' : 'var(--text-muted)', fontSize: 13, fontWeight: activeTab === tab.id ? 600 : 400, transition: 'all 0.2s', fontFamily: 'var(--font-body)', textAlign: 'left' }}>
+                  style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 12px', borderRadius: 8, background: activeTab === tab.id ? 'var(--surface-hover)' : 'transparent', border: 'none', cursor: 'pointer', marginBottom: 4, color: activeTab === tab.id ? 'var(--text)' : 'var(--text-muted)', fontSize: 13, fontWeight: activeTab === tab.id ? 600 : 400, transition: 'all 0.2s', fontFamily: 'var(--font-body)', textAlign: 'left' }}>
                   <span>{tab.label}</span>
                   <ChevronRight size={14} />
                 </button>
@@ -188,10 +187,8 @@ export default function TripResult() {
       </div>
 
       <style>{`
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         @media (max-width: 900px) {
           .result-grid { grid-template-columns: 1fr !important; }
-          .result-sidebar { order: -1; }
         }
       `}</style>
     </div>
