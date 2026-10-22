@@ -34,11 +34,12 @@ export const platformConfig = {
   irctc: { name: 'IRCTC', color: 'var(--text)', bg: 'var(--surface-hover)' },
 };
 
+// lucide-react icon names (the UI maps these to icon components)
 export const transportIcons = {
-  bus: '🚌',
-  train: '🚂',
-  flight: '✈️',
-  cab: '🚖',
+  bus: 'Bus',
+  train: 'Train',
+  flight: 'Plane',
+  cab: 'Car',
 };
 
 export const formatCurrency = (amount) =>

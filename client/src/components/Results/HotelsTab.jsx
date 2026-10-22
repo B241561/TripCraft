@@ -1,7 +1,7 @@
-import { ExternalLink, Star } from 'lucide-react';
+import { ExternalLink, Star, Hotel, MapPin, Check, Wifi, Coffee, Waves, Snowflake, Dumbbell, Car, Utensils, Wine, Flower2, ConciergeBell } from 'lucide-react';
 import { formatCurrency } from '../../utils/bookingRedirects';
 
-const amenityIcons = { 'Free WiFi': '📶', 'Breakfast': '🍳', 'Pool': '🏊', 'AC': '❄️', 'Gym': '💪', 'Parking': '🅿️', 'Restaurant': '🍽️', 'Bar': '🍹', 'Spa': '💆', 'Room Service': '🛎️' };
+const amenityIcons = { 'Free WiFi': Wifi, 'Breakfast': Coffee, 'Pool': Waves, 'AC': Snowflake, 'Gym': Dumbbell, 'Parking': Car, 'Restaurant': Utensils, 'Bar': Wine, 'Spa': Flower2, 'Room Service': ConciergeBell };
 
 export default function HotelsTab({ hotels, destination }) {
   if (!hotels?.length) return <p style={{ color: 'var(--text-muted)', textAlign: 'center', padding: 40 }}>No hotel data available.</p>;
@@ -11,7 +11,7 @@ export default function HotelsTab({ hotels, destination }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <p style={{ color: 'var(--text-muted)', fontSize: 14, marginBottom: 8 }}>
-        🏨 Compare {hotels.length} hotel options in <strong style={{ color: 'var(--cream)' }}>{destination}</strong> — sorted from budget to premium.
+        Compare {hotels.length} hotel options in <strong style={{ color: 'var(--cream)' }}>{destination}</strong> — sorted from budget to premium.
       </p>
 
       {hotels.map((hotel, idx) => (
@@ -29,14 +29,14 @@ export default function HotelsTab({ hotels, destination }) {
 
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 20, flexWrap: 'wrap' }}>
             {/* Hotel icon */}
-            <div style={{ width: 48, height: 48, borderRadius: 10, background: 'var(--surface-hover)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0 }}>
-              🏨
+            <div style={{ width: 48, height: 48, borderRadius: 10, background: 'var(--surface-hover)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', flexShrink: 0 }}>
+              <Hotel size={22} />
             </div>
 
             {/* Hotel info */}
             <div style={{ flex: 1, minWidth: 200 }}>
               <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 19, fontWeight: 700, marginBottom: 4 }}>{hotel.name}</h3>
-              {hotel.area && <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 8 }}>📍 {hotel.area}</p>}
+              {hotel.area && <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 5 }}><MapPin size={13} /> {hotel.area}</p>}
 
               {/* Rating */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12 }}>
@@ -50,16 +50,19 @@ export default function HotelsTab({ hotels, destination }) {
 
               {/* Amenities */}
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                {hotel.amenities?.slice(0, 6).map(a => (
-                  <span key={a} style={{ fontSize: 11, padding: '3px 8px', borderRadius: 8, background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text-muted)' }}>
-                    {amenityIcons[a] || '✓'} {a}
+                {hotel.amenities?.slice(0, 6).map(a => {
+                  const Icon = amenityIcons[a] || Check;
+                  return (
+                  <span key={a} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 11, padding: '3px 8px', borderRadius: 8, background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text-muted)' }}>
+                    <Icon size={11} /> {a}
                   </span>
-                ))}
+                  );
+                })}
               </div>
 
               {hotel.highlight && (
                 <p style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 10, fontStyle: 'italic' }}>
-                  ✨ {hotel.highlight}
+                  {hotel.highlight}
                 </p>
               )}
             </div>

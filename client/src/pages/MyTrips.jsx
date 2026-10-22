@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getMyTrips, deleteTrip } from '../services/api';
-import { MapPin, Calendar, Users, Wallet, Trash2, ArrowRight, Sparkles } from 'lucide-react';
+import { MapPin, Calendar, Users, Wallet, Trash2, ArrowRight, Sparkles, Plane } from 'lucide-react';
 import { formatCurrency } from '../utils/bookingRedirects';
 
 export default function MyTrips() {
@@ -54,7 +54,7 @@ export default function MyTrips() {
 
         {trips.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '80px 20px' }}>
-            <p style={{ fontSize: 56, marginBottom: 20 }}>🗺️</p>
+            <div style={{ color: 'var(--text-muted)', display: 'flex', justifyContent: 'center', marginBottom: 20 }}><MapPin size={44} /></div>
             <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 28, fontWeight: 700, marginBottom: 12 }}>No trips yet</h2>
             <p style={{ color: 'var(--text-muted)', marginBottom: 28 }}>Start planning your first AI-powered trip adventure!</p>
             <button onClick={() => navigate('/plan')} className="btn btn-gold">
@@ -87,9 +87,9 @@ export default function MyTrips() {
                     <Trash2 size={13} />
                   </button>
 
-                  {/* Destination emoji & route */}
+                  {/* Route */}
                   <div style={{ marginBottom: 16 }}>
-                    <div style={{ fontSize: 28, marginBottom: 10 }}>✈️</div>
+                    <div style={{ color: 'var(--text-muted)', marginBottom: 10 }}><Plane size={24} /></div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
                       <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 700 }}>{trip.destination}</h3>
                       <span style={{ padding: '3px 8px', borderRadius: 8, fontSize: 11, fontWeight: 650, background: catStyle.bg, color: catStyle.color }}>

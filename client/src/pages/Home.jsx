@@ -1,13 +1,13 @@
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, Map, Star, ArrowRight, Plane, Train, Bus, Hotel } from 'lucide-react';
+import { Sparkles, Map, Star, ArrowRight, Plane, Train, Bus, Hotel, Waves, Mountain, MountainSnow, Castle, Trees, Landmark } from 'lucide-react';
 
 const destinations = [
-  { name: 'Goa', tag: 'Beach Paradise', emoji: '🏖️' },
-  { name: 'Manali', tag: 'Mountain Escape', emoji: '🏔️' },
-  { name: 'Jaipur', tag: 'Royal Heritage', emoji: '🏰' },
-  { name: 'Kerala', tag: "God's Own Country", emoji: '🌴' },
-  { name: 'Varanasi', tag: 'Spiritual Journey', emoji: '🕌' },
-  { name: 'Ladakh', tag: 'High Altitude', emoji: '🗻' },
+  { name: 'Goa', tag: 'Beach Paradise', icon: Waves },
+  { name: 'Manali', tag: 'Mountain Escape', icon: Mountain },
+  { name: 'Jaipur', tag: 'Royal Heritage', icon: Castle },
+  { name: 'Kerala', tag: "God's Own Country", icon: Trees },
+  { name: 'Varanasi', tag: 'Spiritual Journey', icon: Landmark },
+  { name: 'Ladakh', tag: 'High Altitude', icon: MountainSnow },
 ];
 
 const features = [
@@ -81,7 +81,7 @@ export default function Home() {
                 onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.borderColor = 'var(--text-muted)'; }}
                 onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.borderColor = 'var(--border)'; }}
               >
-                <span aria-hidden="true" style={{ fontSize: 28 }}>{dest.emoji}</span>
+                <span aria-hidden="true" style={{ color: 'var(--text-muted)', display: 'flex' }}><dest.icon size={26} /></span>
                 <span>
                   <strong style={{ display: 'block', fontSize: 16, marginBottom: 2 }}>{dest.name}</strong>
                   <span style={{ color: 'var(--text-muted)', fontSize: 13 }}>{dest.tag}</span>

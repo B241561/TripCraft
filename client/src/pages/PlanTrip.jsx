@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { generateTrip } from '../services/api';
-import { MapPin, Calendar, Users, Wallet, ChevronRight, ChevronLeft, Sparkles, Loader } from 'lucide-react';
+import { MapPin, Calendar, Users, Wallet, ChevronRight, ChevronLeft, Sparkles, Loader, Check } from 'lucide-react';
 
 const PREFERENCES = ['Adventure', 'Heritage & Culture', 'Beach', 'Mountains', 'Wildlife', 'Food & Cuisine', 'Shopping', 'Spiritual', 'Romantic', 'Family-Friendly'];
 
@@ -27,7 +27,7 @@ export default function PlanTrip() {
     preferences: f.preferences.includes(p) ? f.preferences.filter(x => x !== p) : [...f.preferences, p]
   }));
 
-  const budgetLabel = form.budget < 10000 ? '💚 Budget Travel' : form.budget < 30000 ? '💛 Mid-Range' : '🌟 Luxury';
+  const budgetLabel = form.budget < 10000 ? 'Budget Travel' : form.budget < 30000 ? 'Mid-Range' : 'Luxury';
 
   const handleSubmit = async () => {
     if (!form.source || !form.destination) { setError('Please fill in source and destination.'); return; }
@@ -103,7 +103,7 @@ export default function PlanTrip() {
                         onMouseEnter={e => e.currentTarget.style.background = 'var(--surface-hover)'}
                         onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                         onMouseDown={() => { setForm(f => ({ ...f, source: city })); setSourceQuery(''); }}>
-                        📍 {city}
+                        <MapPin size={13} style={{ marginRight: 8, verticalAlign: 'middle', color: 'var(--text-muted)' }} />{city}
                       </div>
                     ))}
                   </div>
@@ -128,7 +128,7 @@ export default function PlanTrip() {
                         onMouseEnter={e => e.currentTarget.style.background = 'var(--surface-hover)'}
                         onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                         onMouseDown={() => { setForm(f => ({ ...f, destination: city })); setDestQuery(''); }}>
-                        🗺️ {city}
+                        <MapPin size={13} style={{ marginRight: 8, verticalAlign: 'middle', color: 'var(--text-muted)' }} />{city}
                       </div>
                     ))}
                   </div>
@@ -194,11 +194,11 @@ export default function PlanTrip() {
 
               {/* Summary pill */}
               <div style={{ marginTop: 24, padding: '14px 18px', borderRadius: 12, background: 'var(--gold-dim)', border: '1px solid var(--border-gold)' }}>
-                <p style={{ fontSize: 13, color: 'var(--gold)' }}>
-                  💰 Budget per person: <strong>₹{Math.round(form.budget / form.numberOfPeople).toLocaleString('en-IN')}</strong> &nbsp;|&nbsp;
-                  📅 {form.numberOfDays} days &nbsp;|&nbsp;
-                  👥 {form.numberOfPeople} {form.numberOfPeople === 1 ? 'person' : 'people'}
-                </p>
+                <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px 20px', fontSize: 13, color: 'var(--gold)' }}>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Wallet size={14} /> Budget per person: <strong>₹{Math.round(form.budget / form.numberOfPeople).toLocaleString('en-IN')}</strong></span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Calendar size={14} /> {form.numberOfDays} days</span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><Users size={14} /> {form.numberOfPeople} {form.numberOfPeople === 1 ? 'person' : 'people'}</span>
+                </div>
               </div>
             </div>
           )}
@@ -218,7 +218,7 @@ export default function PlanTrip() {
                     key={p}
                     onClick={() => togglePref(p)}
                     style={{ padding: '8px 12px', borderRadius: 8, border: `1px solid ${form.preferences.includes(p) ? 'var(--text)' : 'var(--border)'}`, background: form.preferences.includes(p) ? 'var(--surface-hover)' : 'var(--surface)', color: form.preferences.includes(p) ? 'var(--text)' : 'var(--text-muted)', fontSize: 13, fontWeight: 500, transition: 'all 0.2s', cursor: 'pointer' }}>
-                    {form.preferences.includes(p) ? '✓ ' : ''}{p}
+                    {form.preferences.includes(p) && <Check size={13} style={{ marginRight: 6, verticalAlign: 'middle' }} />}{p}
                   </button>
                 ))}
               </div>

@@ -1,11 +1,11 @@
-import { ExternalLink, Clock, Users, CheckCircle } from 'lucide-react';
+import { ExternalLink, Clock, Users, CheckCircle, Bus, Train, Plane, Car, Trophy } from 'lucide-react';
 import { formatCurrency, getBookingURL } from '../../utils/bookingRedirects';
 
 const modeConfig = {
-  bus:    { emoji: '🚌', label: 'Bus', platformName: 'RedBus' },
-  train:  { emoji: '🚂', label: 'Train', platformName: 'RailYatri' },
-  flight: { emoji: '✈️', label: 'Flight', platformName: 'MakeMyTrip' },
-  cab:    { emoji: '🚖', label: 'Cab', platformName: 'Ola Cabs' },
+  bus:    { icon: Bus, label: 'Bus', platformName: 'RedBus' },
+  train:  { icon: Train, label: 'Train', platformName: 'RailYatri' },
+  flight: { icon: Plane, label: 'Flight', platformName: 'MakeMyTrip' },
+  cab:    { icon: Car, label: 'Cab', platformName: 'Ola Cabs' },
 };
 
 export default function TransportTab({ transport, source, destination, numberOfPeople }) {
@@ -17,18 +17,19 @@ export default function TransportTab({ transport, source, destination, numberOfP
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <p style={{ color: 'var(--text-muted)', fontSize: 14, marginBottom: 8 }}>
-        🗺️ Compare transport options from <strong style={{ color: 'var(--cream)' }}>{source}</strong> to <strong style={{ color: 'var(--cream)' }}>{destination}</strong> for {numberOfPeople} {numberOfPeople === 1 ? 'person' : 'people'}
+        Compare transport options from <strong style={{ color: 'var(--cream)' }}>{source}</strong> to <strong style={{ color: 'var(--cream)' }}>{destination}</strong> for {numberOfPeople} {numberOfPeople === 1 ? 'person' : 'people'}
       </p>
 
       {/* Comparison bar */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 12, marginBottom: 8 }}>
         {sorted.map((t, idx) => {
           const cfg = modeConfig[t.mode?.toLowerCase()] || modeConfig.bus;
+          const Icon = cfg.icon;
           const maxCost = Math.max(...sorted.map(x => x.totalCost || 1));
           const pct = Math.round(((t.totalCost || 0) / maxCost) * 100);
           return (
             <div key={idx} style={{ padding: '14px 16px', borderRadius: 12, background: 'var(--surface)', border: '1px solid var(--border)', textAlign: 'center' }}>
-              <div style={{ fontSize: 24, marginBottom: 4 }}>{cfg.emoji}</div>
+              <div style={{ display: 'flex', justifyContent: 'center', color: 'var(--text-muted)', marginBottom: 6 }}><Icon size={22} /></div>
               <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text)' }}>{formatCurrency(t.totalCost)}</div>
               <div style={{ fontSize: 11, color: 'var(--text-dim)', marginTop: 2 }}>{cfg.label}</div>
               <div style={{ height: 3, background: 'var(--border)', borderRadius: 2, marginTop: 8, overflow: 'hidden' }}>
@@ -42,6 +43,7 @@ export default function TransportTab({ transport, source, destination, numberOfP
       {/* Transport Cards */}
       {sorted.map((t, idx) => {
         const cfg = modeConfig[t.mode?.toLowerCase()] || modeConfig.bus;
+        const Icon = cfg.icon;
         const bookUrl = t.bookingUrl || getBookingURL(t.mode?.toLowerCase(), source, destination);
 
         return (
@@ -52,14 +54,14 @@ export default function TransportTab({ transport, source, destination, numberOfP
           >
             {idx === 0 && (
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '3px 8px', borderRadius: 8, background: 'var(--surface-hover)', border: '1px solid var(--border)', color: 'var(--text-muted)', fontSize: 11, fontWeight: 600, marginBottom: 14, letterSpacing: '0.02em' }}>
-                🏆 Cheapest Option
+                <Trophy size={12} /> Cheapest Option
               </div>
             )}
 
             <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16, flexWrap: 'wrap' }}>
               {/* Mode icon */}
-              <div style={{ width: 48, height: 48, borderRadius: 10, background: 'var(--surface-hover)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, flexShrink: 0 }}>
-                {cfg.emoji}
+              <div style={{ width: 48, height: 48, borderRadius: 10, background: 'var(--surface-hover)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', flexShrink: 0 }}>
+                <Icon size={22} />
               </div>
 
               <div style={{ flex: 1 }}>
@@ -78,7 +80,7 @@ export default function TransportTab({ transport, source, destination, numberOfP
                 </div>
 
                 {t.departureInfo && (
-                  <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 10, fontStyle: 'italic' }}>ℹ️ {t.departureInfo}</p>
+                  <p style={{ fontSize: 13, color: 'var(--text-muted)', marginBottom: 10, fontStyle: 'italic' }}>{t.departureInfo}</p>
                 )}
 
                 {t.pros?.length > 0 && (

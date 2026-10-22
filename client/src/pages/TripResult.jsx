@@ -9,10 +9,10 @@ import PlacesTab from '../components/Results/PlacesTab';
 import { ArrowLeft, Calendar, Users, Wallet, MapPin, Lightbulb, ChevronRight } from 'lucide-react';
 
 const TABS = [
-  { id: 'itinerary', label: '🗓️ Itinerary', desc: 'Day-by-day plan' },
-  { id: 'transport', label: '🚌 Transport', desc: 'Compare options' },
-  { id: 'hotels', label: '🏨 Hotels', desc: 'Best stays' },
-  { id: 'places', label: '📍 Top Places', desc: 'Must visits' },
+  { id: 'itinerary', label: 'Itinerary', desc: 'Day-by-day plan' },
+  { id: 'transport', label: 'Transport', desc: 'Compare options' },
+  { id: 'hotels', label: 'Hotels', desc: 'Best stays' },
+  { id: 'places', label: 'Top Places', desc: 'Must visits' },
 ];
 
 export default function TripResult() {
@@ -39,7 +39,6 @@ export default function TripResult() {
 
   if (error) return (
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 16 }}>
-      <p style={{ fontSize: 48 }}>😕</p>
       <p style={{ color: 'var(--text-muted)' }}>{error}</p>
       <button onClick={() => navigate('/plan')} className="btn btn-gold">Plan New Trip</button>
     </div>
@@ -71,7 +70,7 @@ export default function TripResult() {
                 {source} <span style={{ color: 'var(--text-dim)' }}>→</span> <span className="gold-text">{destination}</span>
               </h1>
               {plan?.bestTimeToVisit && (
-                <p style={{ color: 'var(--text-muted)', fontSize: 14, marginTop: 6 }}>🌤️ Best time: {plan.bestTimeToVisit}</p>
+                <p style={{ color: 'var(--text-muted)', fontSize: 14, marginTop: 6 }}>Best time: {plan.bestTimeToVisit}</p>
               )}
             </div>
 
@@ -158,7 +157,7 @@ export default function TripResult() {
             {/* Local Cuisine */}
             {plan?.localCuisine?.length > 0 && (
               <div className="glass-card" style={{ padding: '20px' }}>
-                <h3 style={{ fontWeight: 700, fontSize: 15, marginBottom: 14 }}>🍛 Must-Try Food</h3>
+                <h3 style={{ fontWeight: 700, fontSize: 15, marginBottom: 14 }}>Must-Try Food</h3>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                   {plan.localCuisine.map((dish, i) => (
                     <span key={i} style={{ padding: '5px 8px', borderRadius: 8, background: 'var(--surface)', border: '1px solid var(--border)', fontSize: 12, color: 'var(--text-muted)' }}>

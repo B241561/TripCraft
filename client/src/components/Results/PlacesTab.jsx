@@ -1,9 +1,9 @@
-import { Star, Clock, Ticket } from 'lucide-react';
+import { Star, Clock, Ticket, Landmark, Castle, Mountain, Waves, Store, Trees, Droplets, Crown, Church, Flower2, PawPrint, MapPin } from 'lucide-react';
 
-const categoryEmoji = {
-  'Heritage': '🏰', 'Temple': '🛕', 'Beach': '🏖️', 'Mountain': '🏔️', 'Market': '🛍️',
-  'Museum': '🏛️', 'Park': '🌳', 'Lake': '🏞️', 'Fort': '🏯', 'Garden': '🌺',
-  'Wildlife': '🦁', 'Waterfall': '💧', 'Palace': '👑', 'Church': '⛪', 'Mosque': '🕌',
+const categoryIcon = {
+  'Heritage': Landmark, 'Temple': Landmark, 'Beach': Waves, 'Mountain': Mountain, 'Market': Store,
+  'Museum': Landmark, 'Park': Trees, 'Lake': Waves, 'Fort': Castle, 'Garden': Flower2,
+  'Wildlife': PawPrint, 'Waterfall': Droplets, 'Palace': Crown, 'Church': Church, 'Mosque': Landmark,
 };
 
 export default function PlacesTab({ places }) {
@@ -12,12 +12,12 @@ export default function PlacesTab({ places }) {
   return (
     <div>
       <p style={{ color: 'var(--text-muted)', fontSize: 14, marginBottom: 24 }}>
-        🗺️ Top {places.length} must-visit places — curated by AI based on popularity and traveller ratings.
+        Top {places.length} must-visit places — curated by AI based on popularity and traveller ratings.
       </p>
 
       <div className="home-card-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 20 }}>
         {places.map((place, idx) => {
-          const emoji = categoryEmoji[place.category] || '📍';
+          const Icon = categoryIcon[place.category] || MapPin;
 
           return (
             <div
@@ -35,13 +35,13 @@ export default function PlacesTab({ places }) {
               {/* Must-see badge */}
               {place.mustSee && (
                 <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '3px 8px', borderRadius: 8, background: 'var(--surface-hover)', border: '1px solid var(--border)', fontSize: 10, color: 'var(--text-muted)', fontWeight: 650, marginBottom: 10, letterSpacing: '0.06em' }}>
-                  ⭐ MUST VISIT
+                  <Star size={10} /> MUST VISIT
                 </div>
               )}
 
               <div style={{ display: 'flex', gap: 14, marginBottom: 12 }}>
-                <div style={{ width: 48, height: 48, borderRadius: 10, background: 'var(--surface-hover)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0 }}>
-                  {emoji}
+                <div style={{ width: 48, height: 48, borderRadius: 10, background: 'var(--surface-hover)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', flexShrink: 0 }}>
+                  <Icon size={22} />
                 </div>
                 <div>
                   <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 700, marginBottom: 2, color: 'var(--cream)', lineHeight: 1.3 }}>{place.name}</h3>

@@ -62,11 +62,11 @@ describe('TripCraft booking utilities', () => {
     expect(url).toBe('https://www.makemytrip.com');
   });
 
-  it('contains the configured transport icons', () => {
-    expect(transportIcons.bus).toBe('🚌');
-    expect(transportIcons.train).toBe('🚂');
-    expect(transportIcons.flight).toBe('✈️');
-    expect(transportIcons.cab).toBe('🚖');
+  it('maps each transport mode to an icon name', () => {
+    expect(transportIcons.bus).toBe('Bus');
+    expect(transportIcons.train).toBe('Train');
+    expect(transportIcons.flight).toBe('Plane');
+    expect(transportIcons.cab).toBe('Car');
   });
 
   it('contains the configured booking platforms', () => {
